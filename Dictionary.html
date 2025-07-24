@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מילון מונחים - סדרת דופליקטים</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+    :root {
+      --main-color: #4a0072;
+      --glow-color: #9d00ff;
+      --text-color: white;
+      --accent-color: #00e5e5;
+    }
+
+    body {
+      font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('images/צילום מסך 2025-04-17 131825.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* שכבת אפקט קסום */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(157, 0, 255, 0.15) 0%, transparent 70%),
+        radial-gradient(circle at 80% 10%, rgba(157, 0, 255, 0.1) 0%, transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* אנימציית חלקיקים מרחפים */
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .header {
+      background-color: var(--main-color);
+      box-shadow: 0 0 15px var(--glow-color);
+      border: 1px solid var(--glow-color);
+      color: white;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+    }
+
+    /* אפקט זוהר בכותרת */
+    .header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(157, 0, 255, 0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    .category-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 0.5rem;
+    }
+
+    .category-nav button {
+      background-color: var(--main-color);
+      color: white;
+      border: 1px solid var(--glow-color);
+      border-radius: 25px;
+      padding: 0.5rem 1rem;
+      font-family: 'Heebo', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.8rem;
+      box-shadow: 0 0 5px rgba(157, 0, 255, 0.3);
+      margin: 0.25rem;
+    }
+
+    .category-nav button:hover {
+      background-color: var(--glow-color);
+      box-shadow: 0 0 10px rgba(157, 0, 255, 0.8);
+    }
+
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 25px;
+      border: 2px solid var(--glow-color);
+      background-color: rgba(74, 0, 114, 0.8);
+      color: white;
+      font-family: 'Heebo', sans-serif;
+      font-size: 1rem;
+      box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(157, 0, 255, 0.8);
+      background-color: rgba(74, 0, 114, 0.9);
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .container {
+      max-width: 2000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .terms-category {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: rgba(74, 0, 114, 0.7);
+      /* רקע מעט שקוף */
+      box-shadow: 0 0 10px rgba(157, 0, 255, 0.2);
+    }
+
+    .terms-category h2 {
+      color: var(--accent-color);
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-shadow: 0 0 4px rgba(0, 229, 229, 0.5);
+    }
+
+    .terms-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+
+    /* מרובעים עם מילים - מוגדלים ל-280px */
+    .term-box {
+      width: 280px;
+      height: 150px;
+      perspective: 1000px;
+      cursor: pointer;
+      display: flex;
+      /* Added for centering */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .term-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .term-box:hover .term-inner {
+      transform: rotateY(180deg);
+    }
+
+    .term-front,
+    .term-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 15px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .term-front {
+      background-color: var(--main-color);
+      color: white;
+      box-shadow: 0 0 10px var(--glow-color);
+      border: 1px solid var(--glow-color);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .term-back {
+      background-color: rgba(74, 0, 114, 0.9);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 0 10px var(--glow-color);
+      border: 1px solid var(--glow-color);
+      font-size: 0.95rem;
+      overflow-y: auto;
+    }
+
+    /* אפקט זוהר סביב המרובעים */
+    .term-front::before,
+    .term-back::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, transparent, rgba(157, 0, 255, 0.3), transparent);
+      z-index: -1;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .term-box:hover .term-front::before,
+    .term-box:hover .term-back::before {
+      opacity: 1;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+
+    .control-btn {
+      background-color: var(--main-color);
+      color: white;
+      border: 1px solid var(--glow-color);
+      border-radius: 25px;
+      padding: 0.5rem 1.5rem;
+      font-family: 'Heebo', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+    }
+
+    .control-btn:hover {
+      background-color: var(--glow-color);
+      box-shadow: 0 0 15px rgba(157, 0, 255, 0.8);
+    }
+
+    footer {
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 1;
+      background-color: var(--main-color);
+      box-shadow: 0 0 15px var(--glow-color);
+      border: 1px solid var(--glow-color);
+      clip-path: polygon(0% 30%, 50% 0%, 100% 30%, 100% 100%, 0% 100%);
+      padding-top: 5rem;
+    }
+
+    footer a {
+      color: var(--text-color);
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-color);
+      text-shadow: 0 0 10px rgba(0, 229, 229, 0.5);
+    }
+
+    /* תמיכה במסכים קטנים */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .header {
+        padding: 2rem 1rem;
+      }
+
+      .category-nav button {
+        font-size: 0.7rem;
+        padding: 0.5rem;
+      }
+
+      .terms-grid {
+        gap: 1rem;
+      }
+
+      .term-box {
+        width: 230px;
+        height: 130px;
+      }
+
+      .term-front {
+        font-size: 1.1rem;
+      }
+
+      .term-back {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* שינויים עבור כפתורי קטגוריות - ריכוז לאמצע */
+    .category-nav {
+      justify-content: center;
+      /* זה מרכז את הכפתורים אופקית */
+      display: flex;
+      /* הוספה של display flex */
+      flex-wrap: wrap;
+      /* מאפשר לכפתורים לעבור לשורה חדשה אם אין מספיק מקום */
+      gap: 0.5rem;
+      /* מוסיף מרווח בין הכפתורים */
+      margin-bottom: 1rem;
+    }
+
+    .category-nav button {
+      margin: 0.25rem;
+      /* מוסיף מרווח אחיד סביב הכפתורים */
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div class="header">
+    <a href="home.html">
+      <h1>מילון מונחים - סדרת דופליקטים כרך א׳</h1>
+    </a>
+  </div>
+
+  <div class="category-nav">
+    <button data-category="all">הצג הכל</button>
+    <button data-category="דמויות מפתח">דמויות מפתח</button>
+    <button data-category="דמויות שוליות">דמויות שוליות</button>
+    <button data-category="בעלי חיים">בעלי חיים</button>
+    <button data-category="מקומות">מקומות</button>
+    <button data-category="מדינות">מדינות</button>
+    <button data-category="בעולם שאחרי המהפיכה">בעולם שאחרי המהפיכה</button>
+    <button data-category="עולם הדופליקטים - דמויות">עולם הדופליקטים - דמויות</button>
+    <button data-category="עולם הדופליקטים - מקומות">עולם הדופליקטים - מקומות</button>
+    <button data-category="עולם הדופליקטים - מושגים">עולם הדופליקטים - מושגים</button>
+    <button data-category="עולם הדופליקטים - חפצים">עולם הדופליקטים - חפצים</button>
+    <button data-category="עולם הדופליקטים - כוחות העל">עולם הדופליקטים - כוחות העל</button>
+    <button data-category="עולם הדופליקטים - חוקים - סקנדר ובייס">עולם הדופליקטים - חוקים - סקנדר ובייס</button>
+    <button data-category="עולם הדופליקטים - חוקים - אוצרים וכוחות על">עולם הדופליקטים - חוקים - אוצרים וכוחות
+      על</button>
+    <button data-category="עולם הדופליקטים - חוקים - דופליקטיות ובועת האוצרים">עולם הדופליקטים - חוקים - דופליקטיות
+      ובועת האוצרים</button>
+    <button data-category="עולם הדופליקטים - חוקים - כדור הטונגו">עולם הדופליקטים - חוקים - כדור הטונגו</button>
+    <button data-category="עבר - דמויות">עבר - דמויות</button>
+    <button data-category="עבר - אירועים">עבר - אירועים</button>
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="search-box" class="search-box" placeholder="חפש מונח...">
+  </div>
+
+  <div class="container" id="terms-container">
+  </div>
+
+  <div class="controls">
+    <button class="control-btn" data-category="all">הצג הכל</button>
+  </div>
+
+  <footer>
+    © 2025 מילון מונחים לסדרת דופליקטים - כל הזכויות שמורות
+  </footer>
+
+  <script>
+    // מאגר מונחים - כל המונחים יירשמו כאן
+    // אם מעוניינים להוסיף מונח חדש, יש להוסיף אותו למערך זה
+
+    const termsData = {
+      "דמויות מפתח": [{
+        name: "דני הארט",
+        definition: "גיבור הסדרה. בחור מוכשר וחכם, הבכור במשפחה, בעל מחלת שכחה חמורה"
+      }, {
+        name: "מייקל הארט",
+        definition: "אביו של דני. איש פיקח, שלוו ואמיץ, נולד וגדל בעמק השדים עד גיל 26"
+      }, {
+        name: "הלן הארט",
+        definition: "אמו של דני. עדינה ואצילית, רוקחת צמחי מרפא, דופליקטית"
+      }, {
+        name: "אלחנן הארט",
+        definition: "אחיו של דני, קטן ממנו ב-3 שנים, רזה ושנון"
+      }, {
+        name: "אלישבע הארט",
+        definition: "אחותו של דני, השניה במשפחה אחרי דני הבכור, מעריצה מושבעת"
+      }, {
+        name: "לאי הארט",
+        definition: "אחותו הקטנה של דני, אוהבת לגדל את יונות הדואר"
+      }, {
+        name: "דוד בן",
+        definition: "אחיה של הלן, גדלו יחד בבית יתומים. גר בפיוצ'ר"
+      }, {
+        name: "זירו",
+        definition: "בן אנוש קר, רצחני ומחושב היטב, המעוניין לשלוט במסדר הדופליקטים"
+      }, {
+        name: "אאודו",
+        definition: "עוזרו הנאמן של זירו, בן אנוש בן 50"
+      }, {
+        name: "סנדי הלר",
+        definition: "חברו של דני בשנת ההתגלות, בן סיים. לבבי וחברותי"
+      }, {
+        name: "דיוויד ברוק",
+        definition: "חברו של דני בשנת ההתגלות, בן פיוצ'ר. מפונק ואוהב להתווכח"
+      }, {
+        name: "ישי קימל",
+        definition: "חברו של דני בשנת ההתגלות, בן אוטוקרט. גבוה ונאה, מתמיד וחרוץ."
+      }, {
+        name: "נתן",
+        definition: "חברו של דני בשנת ההתגלות, בן אינדיבידואל. ביישן, בעל קול ערב וכישרון מוזיקלי"
+      }, {
+        name: "פרופסור ראול אנגלר",
+        definition: "מנהל תכנית שנת ההתגלות, דופליקט בכיר"
+      }, {
+        name: "פרופסור רולן",
+        definition: "מנהל כוח אדם בתכנית ההתגלות"
+      }, {
+        name: "קותי אדלר",
+        definition: "אוטוקרטי, רוכב ברקים, המדריך של קבוצתו של דני במדינת סיים."
+      }, {
+        name: "מקסימילאן",
+        definition: "חברו של מייקל, בן גילו, נפגשו לראשונה בעמק השדים בו נכלא מקס' ל-15 שנים."
+      }, {
+        name: "בנדו",
+        definition: "העוזר הדופליקט של זירו. אסופי, כהה עור, בעל כח על של ראיה על-חושית"
+      },],
+      "דמויות שוליות": [{
+        name: "הרב כץ",
+        definition: "משגיח כשרות בפרדייס"
+      }, {
+        name: "הרב מנדל",
+        definition: "המשגיח בישיבה של דני"
+      }, {
+        name: "אהרונסון",
+        definition: "חברו של מייקל בפרדייס"
+      }, {
+        name: "לוינזון",
+        definition: "חברו של מייקל בפרדייס"
+      }, {
+        name: "הנדל",
+        definition: "חברו של מייקל בפרדייס"
+      }, {
+        name: "ד\"ר ברגר",
+        definition: "הנוירולוג הראשון ששפגש את דני אחרי הנשיכה, בפרדייס"
+      }, {
+        name: "פרופ' הילג",
+        definition: "נוירולוג בלילנד הרטוול, פיוצ'ר"
+      }, {
+        name: "פרופ' דודיאן",
+        definition: "נוירולוג בלילנד הרטוול, פיוצ'ר"
+      }, {
+        name: "גייר",
+        definition: "דופליקט בעמק השדים, נהרג ע\"י זירו"
+      }, {
+        name: "דוב",
+        definition: "משגיח הכשרות במחנה גלובל"
+      }, {
+        name: "טיורו",
+        definition: "אחד מעוזריו של זירו"
+      }, {
+        name: "ד\"ר אוליק",
+        definition: "הרופא שפוגש את דני הבייס ברגע ההתעוררות"
+      }, {
+        name: "פרופ' אלטמן",
+        definition: "הרופא שפוגש את דני הבייס ברגע ההתעוררות"
+      }, {
+        name: "דיואו",
+        definition: "פיוצ'ר, הקבוצה הזוכה במדינת סיים, זכתה ב20 נקודות"
+      }, {
+        name: "ג'ואי",
+        definition: "פרדייס, הקבוצה הזוכה במדינת סיים, זכתה ב20 נקודות"
+      }, {
+        name: "אלמו",
+        definition: "אינדיבידואל, הקבוצה הזוכה במדינת סיים, זכתה ב20 נקודות"
+      }, {
+        name: "נהאל",
+        definition: "אוטוקרט, הקבוצה הזוכה במדינת סיים, זכתה ב20 נקודות"
+      }, {
+        name: "מאט",
+        definition: "סיים, הקבוצה הזוכה במדינת סיים, זכתה ב20 נקודות"
+      },],
+      "בעלי חיים": [{
+        name: "ריבר",
+        definition: "הסוס של אלחנן"
+      }, {
+        name: "מוקא",
+        definition: "הסוס של דני"
+      }, {
+        name: "אולט",
+        definition: "הסוס של מייקל"
+      }, {
+        name: "סמי",
+        definition: "כלב השמירה של חוות משפחת הארט"
+      }, {
+        name: "דואוסיינס",
+        definition: "העוף הגדול ביותר בעולם, נוצר בעקבות המהפיכה, בעל שני ראשים ומוטת כנפיים עצומה של מעל 9 מטרים. לעולם אינו ישן. צבעו ירוק-כחול-כתום"
+      }, {
+        name: "גוליבר",
+        definition: "מוטציה של כלב האמסטף, נוצר בעקבות המהפיכה הגדולה. יצור ענק שגודלו כפול מאדם ממוצע. גובה כתיפיו כשני מטרים, רוחבו מטר וחצי, אורכו 3 מטרים"
+      }, {
+        name: "נחש המנסטרום",
+        definition: ""
+      },],
+      "מקומות": [{
+        name: "ביתו של דני",
+        definition: "בקצה הארץ, חווהגדולה ומטופחת עם שדות תבואה, צאן ובקר"
+      }, {
+        name: "מחנה ההכשרה גלובל",
+        definition: ""
+      }, {
+        name: "הרי האולטרא",
+        definition: "במדינת סיים, בצפון העולם"
+      }, {
+        name: "ג'ואישסיים",
+        definition: "שכונת היהודים בסיים"
+      }, {
+        name: "האחוזה המבודדת",
+        definition: ""
+      }, {
+        name: "המרפאה בטיכאה",
+        definition: ""
+      }, {
+        name: "המכרה בטיכאה",
+        definition: ""
+      }, {
+        name: "בית החולים לילנד הרטוול",
+        definition: "המקום בו אושפז דני לאחר הנשיכה על מנת לבדוק כיצד לעזור לשכחה שלו בית החולים ממוקם במדינת פיוצ׳ר"
+      }, {
+        name: "עמק השדים",
+        definition: " אנטארטיקה , בית הכלא העולמי"
+      }, {
+        name: "אזור אלפא",
+        definition: "החלק הקשה בכלא עמק השדים, לא שורדים בו יותר ממס' חודשים"
+      }, {
+        name: "אזור ביתא",
+        definition: "קור, עבודות פרך וכנופיות כלא עוד חלק בעמק השדים"
+      }, {
+        name: "אזור גמא",
+        definition: "קור, סוהרים, כנופיות כלא עוד חלק בעמק השדים"
+      }, {
+        name: "איזור דלתא",
+        definition: "אסירים חופשיים וצריכים לדאוג לעצמם, מלבד אוכל בסיסי וקורת גג מינימלית, עוד חלק בעמק השדים"
+      }, {
+        name: "עמק מילאו",
+        definition: ""
+      }, {
+        name: "צוק אונהא",
+        definition: ""
+      }, {
+        name: "מערת גאן",
+        definition: ""
+      },],
+      "מדינות": [{
+        name: "פיוצ'ר",
+        definition: "אפריקה לשעבר, מדינה בה הכל טכנולוגי . המשפט: רובטים לא טועים"
+      }, {
+        name: "סיים",
+        definition: "יבשת אירופה לשעבר, מדינה בה כולם שווים. המשפט: אנשים לא שווים - הם משתווים"
+      }, {
+        name: "פרדייס",
+        definition: "יבשת אסיה לשעבר, מדינה בה גרים כמו פעם ללא טכנולוגיות כלל. המשפט: החירות לחיות בשלווה"
+      },],
+      "בעולם שאחרי המהפיכה": [{
+        name: "שנת ההתגלות",
+        definition: "מסע שנתי של 200 צעירים נבחרים להכשרתם כבעלי תפקידים בכירים בעתיד"
+      }, {
+        name: "וורלד-פיס",
+        definition: "כח השלום הבין-לאומי השומר על הגבולות והסדר העולמי"
+      }, {
+        name: "רוכבי ברקים",
+        definition: "מאלפי דואוסיינסים היודעים לעוף עליהם"
+      }, {
+        name: "ממורי-צי'פ",
+        definition: "פיתוח פיוצ'רי חדשני לשתילת זכרונות בדרך ממוחשבת"
+      }, {
+        name: "רכבת המטאור",
+        definition: "רכבת הנוסעת על קו עילי בגובה 5 מטרים, במהירות של למעלה מאלף קמ\"ש"
+      }, {
+        name: "ציפורן דיגיטלית",
+        definition: "שבב פיוצ'רי המושתל באגודל ומכילה את כל המידע האישי, כולל חשבון בנק."
+      },],
+      "עולם הדופליקטים - דמויות": [{
+        name: "מקסימיליאן - אוצר האשליות",
+        definition: ""
+      }, {
+        name: "אונטריו - מזכיר המועצה העליונה",
+        definition: ""
+      }, {
+        name: "טהולא - המאסטר",
+        definition: ""
+      }, {
+        name: "אולל - צ'מפיון, זקן הדופליקטים על פני כדור הארץ",
+        definition: ""
+      }, {
+        name: "קייזר - יורשו העתידי של המאסטר",
+        definition: ""
+      }, {
+        name: "הילא - אוצר האש",
+        definition: ""
+      }, {
+        name: "מיארו - אוצר הזמן",
+        definition: ""
+      }, {
+        name: "מיאנמה- אוצרת הרפואה",
+        definition: ""
+      }, {
+        name: "מיללו- אוצר הרפואה",
+        definition: ""
+      }],
+      "עולם הדופליקטים - מקומות": [{
+        name: "הקרצ'ר",
+        definition: "כלא הדופליקטים"
+      }, {
+        name: "מגרשי האשליות",
+        definition: "נועדו לאימון הדופליקטים: לתפעול בייס וסקנדרים בו-זמנית, לתרגול המעברים, להכרת כוחות העל שלהם, ועוד."
+      }, {
+        name: "בניין המועצה העליונה",
+        definition: ""
+      },],
+      "עולם הדופליקטים - מושגים": [{
+        name: "דופליקט",
+        definition: "אדם בעל יכולת שכפול-עצמי"
+      }, {
+        name: "רבלר",
+        definition: "בן אנוש המודע לנוכחות דופליקטים בעולם"
+      }, {
+        name: "סקנדר בועת האוצרים",
+        definition: "שכפול הבייס שחי בבועת האוצרים ולא יוצא משם לעולם, למעט כאשר הבייס נמצא בסכנת חיים"
+      }, {
+        name: "סקנדר ארצי",
+        definition: "שכפול הבייס שחי בכדור הארץ ומבצע משימות, בעל דם סגול ויכולות על-טבעיות"
+      }, {
+        name: "בייס",
+        definition: "הגוף הראשוני של הדופליקט. בעל כוחות רגילים ודם אדום, בעיניו ניצוצות סגולים, המח שלו מפעיל את הסקנדרים"
+      }, {
+        name: "נקסום",
+        definition: "התחברות המח של הבייס לסקנדרים שלו"
+      }, {
+        name: "דוקילרים",
+        definition: "חיילי הקוסטדוס סילנטי העוקבים אחרי הרבלרים והדופליקטים, בעלי שלושה כוחות על וקריאת מחשבות."
+      }, {
+        name: "שבועת היורהמנטום",
+        definition: "דומיה, גבורה, הגנה, נאמנות"
+      }, {
+        name: "הנאמברס",
+        definition: "נאמני זירו"
+      }, {
+        name: "זימון סקנדר",
+        definition: "הבייס יכול לזמן סקנדר שיתייצב לידו ויעזור לו. הזימון נעשה באמצעות תנועות ידיים"
+      }, {
+        name: "יובניס",
+        definition: "דופליקט צעיר, הדרגה הראשונה במסדר"
+      }, {
+        name: "מאסטר",
+        definition: "מנהיג הדופליקטים, בעל כל כוחות-העל"
+      }, {
+        name: "דרגות המסדר",
+        definition: "יובניס, גרדואטי, אדולטוס, פריטוס, צ'מפיון, מאסטר"
+      },],
+      "עולם הדופליקטים - חפצים": [{
+        name: "כדור הטונגו",
+        definition: "כדור סגול זוהר בקוטר 10 ס\"מ, מכיל את הכח הדופליקטי"
+      }, {
+        name: "תליון ההקסגונום",
+        definition: "תליון משושה המבטל את השפעת הכח הדופליקטי. נטרול ההשפעה תלוי ברצונו של לובש התליון"
+      }, {
+        name: "מגילת היורהמנטום",
+        definition: "מגילה שכתב ד\"ר קאלי, המפרטת את ערכי הדופליקטים. נכתבה בשנת 1938"
+      }, {
+        name: "רשימת הרבלרים",
+        definition: "מתעדת את כל הרבלרים, נשמרת בחלקיק סיילנס אצל מפקד הקוסטדוס-סילנטי"
+      }, {
+        name: "התרופה של דני",
+        definition: "תרופה שצובעת את הדם הדופליקטי מסגול לאדום"
+      },],
+      "עולם הדופליקטים - כוחות העל": [{
+        name: "הקפאה",
+        definition: ""
+      }, {
+        name: "מעבר באש",
+        definition: ""
+      }, {
+        name: "תעופה",
+        definition: ""
+      }, {
+        name: "שליטה במים",
+        definition: ""
+      }, {
+        name: "רפואה",
+        definition: ""
+      }, {
+        name: "שליטה בזמן",
+        definition: ""
+      }, {
+        name: "שליטה בזהות",
+        definition: ""
+      }, {
+        name: "קריאת מחשבות",
+        definition: ""
+      }, {
+        name: "ראיה על-חושית",
+        definition: ""
+      },],
+      "עולם הדופליקטים - חוקים - סקנדר ובייס": [{
+        name: "לסקנדר בועת האוצרים יכול להיות מראה שונה מהבייס",
+        definition: ""
+      }, {
+        name: "כאשר חיי הבייס בסכנה, סקנדר בועת האוצרים יבוא להציל אותו",
+        definition: ""
+      }, {
+        name: "כאשר סקנדר בועת האוצרים נמצא בקרצ'ר, הבייס לא יכול להפעיל סקנדרים ארציים",
+        definition: ""
+      }, {
+        name: " סקנדר בועת האוצרים לא יכול להישאר בכדור הארץ חוץ מהצלת הבייס",
+        definition: ""
+      }, {
+        name: "סקנדר ארצי לא יודע כלום על המסדר אם לא לימדו אותו",
+        definition: ""
+      }, {
+        name: "סקנדר לא נהרג - הוא מתמוסס, זה כואב כמו מוות בייסורים.",
+        definition: ""
+      }, {
+        name: "התמוססות סקנדר היא זעזוע גופני חזק שיכולה אף להעיר בייס מתרדמת",
+        definition: ""
+      }, {
+        name: "סקנדר יכול להפוך לרואה-ואינו-נראה על פי רצונו",
+        definition: ""
+      }, {
+        name: "סקנדר פצוע / חולה שמגיע לבועת האוצרים - מתרפא. גם סקנדר ארצי וגם סקנדר בועה.",
+        definition: ""
+      }, {
+        name: "בייס בלי סקנדרים - מת",
+        definition: ""
+      },],
+      "עולם הדופליקטים - חוקים - אוצרים וכוחות על": [{
+        name: "כח העל הראשון של דופליקט, הוא ירושה מההורים.",
+        definition: ""
+      }, {
+        name: "כוחות-על נוספים מקבל הדופליקט על הצלחתו במשימות שהוטלו עליו ע\"י המסדר",
+        definition: ""
+      }, {
+        name: "דופליקט לא יקבל כח-על נוסף למרות הצלחת המשימה, ב-3 מקרים: אם נרשם רבלר על שמו, אם גרם למוות של אדם, או אם התמוסס הסקנדר שלו במהלך המשימה.",
+        definition: ""
+      }, {
+        name: "אם הדופליקט עבר על אחד התנאים בכוונה תחילה: יצר רבלר, גרם מוות או הסתכן בכוונה - ייערך לו שימוע",
+        definition: ""
+      }, {
+        name: "המשימה חייבת להיות מדווחת באופן מלא",
+        definition: ""
+      }, {
+        name: "כל כח על שמתווסף לדופליקט - מייצר סקנדר ארצי נוסף",
+        definition: ""
+      }, {
+        name: "שאיבת כח על מדופליקט גורמת לפציעה קשה דמויית פצע ירי עמוק",
+        definition: ""
+      }, {
+        name: "אוצר שנרצח - זה פוגע בכל נושאי כוח העל שהוא אצר",
+        definition: ""
+      },],
+      "עולם הדופליקטים - חוקים - דופליקטיות ובועת האוצרים": [{
+        name: "הדופליקטיות עוברת בתורשה מאחד ההורים",
+        definition: ""
+      }, {
+        name: "לכל דופליקט, החל מגיל 15, יש סקנדר ארצי וסקנדר בבועת האוצרים",
+        definition: ""
+      }, {
+        name: "אין אפשרות למות בתוך בועת האוצרים, מלבד מוות בעקבות נשיכת זאבי הקרצ'ר",
+        definition: ""
+      }, {
+        name: "כל דופליקט שנחשף לבן אנוש חייב לדווח על רבלר, והוא נרשם על שמו.",
+        definition: ""
+      }, {
+        name: "חלק מהדופליקטים בעלי מראה שונה בכדור הארץ ובבועה",
+        definition: ""
+      },],
+      "עולם הדופליקטים - חוקים - כדור הטונגו": [{
+        name: "הנגיעה בכדור הטונגו תגרום ל- בן אנוש- יהפוך לדופליקט",
+        definition: ""
+      }, {
+        name: "הנגיעה בכדור הטונגו תגרום ל- בייס - יהפוך לבן אוש",
+        definition: "הנגיעה בכדור הטונגו"
+      }, {
+        name: "סקנדר - יכול לגעת, להחזיק ולהזיז, לזמן קצר.",
+        definition: ""
+      }, {
+        name: "סקנדר לא יכול להעביר את הכדור לסקנדר, רק לבייס, אבל אז יאבד הבייס את הדופליקטיות שלו.",
+        definition: ""
+      }, {
+        name: "היכולת להזיז מסקנדר לסקנדר נמצאת רק אצל המאסטר.",
+        definition: ""
+      }, {
+        name: "אם סקנדר מנסה להעביר לסקנדר - הסקנדר המקבל יתמוסס",
+        definition: ""
+      },],
+      "עבר - דמויות": [{
+        name: "ד\"ר מיכאל אנדורוב קאלי",
+        definition: "מדען, מנהל בית יתומים ומייסד הדופליקטים"
+      }, {
+        name: "אברשה",
+        definition: "עוזרו ויורשו הראשון של ד\"ר קאלי"
+      },],
+      "עבר - אירועים": [{
+        name: "אירוע טונגוסקה",
+        definition: "האירוע בו נפל כדור הטונגו מהשמים לכדור הארץ, תוך פיצוץ אדיר ביערות סיביר, בשנת 1908"
+      }, {
+        name: "המהפיכה הגדולה",
+        definition: "פיצוץ גרעיני תת-ימי שהוביל שינויים מרחיקי לכת במבנה הגיאוגרפי והיצורים החיים על כדור הארץ"
+      },],
+    };
+
+    // פונקציה ליצירת אלמנט מונח
+    function createTermElement(term) {
+      const termBox = document.createElement('div');
+      termBox.className = 'term-box';
+      termBox.innerHTML = `
+      <div class="term-inner">
+          <div class="term-front">${term.name}</div>
+          <div class="term-back">${term.definition}</div>
+        </div>  `;
+      return termBox;
+    }
+
+    // פונקציה להצגת מושגים (ללא הגדרה מסתובבת)
+    function createConceptElement(concept) {
+      const conceptDiv = document.createElement('div');
+      conceptDiv.className = 'concept-item'; // Added a class for styling
+      conceptDiv.innerHTML = `<div class="concept-name">${concept.name}</div>`;
+      return conceptDiv;
+    }
+
+    // פונקציה להצגת כל המונחים לפי קטגוריות
+    function renderTerms(termsByCategory = termsData) {
+      const container = document.getElementById('terms-container');
+      container.innerHTML = '';
+      let hasNonDefinition = false; // Flag to track non-definition terms
+
+      for (const category in termsByCategory) {
+        if (termsByCategory.hasOwnProperty(category)) {
+          const categoryDiv = document.createElement('div');
+          categoryDiv.className = 'terms-category';
+
+          const categoryTitle = document.createElement('h2');
+          categoryTitle.textContent = category;
+          categoryDiv.appendChild(categoryTitle);
+
+          const termsGrid = document.createElement('div');
+          termsGrid.className = 'terms-grid';
+          categoryDiv.appendChild(termsGrid);
+
+          termsByCategory[category].forEach(term => {
+            if (term.definition) { // If it has a definition, render as term
+              termsGrid.appendChild(createTermElement(term));
+            } else { // Otherwise render as concept
+              const conceptElement = createConceptElement(term);
+              categoryDiv.appendChild(conceptElement); // Append directly to categoryDiv
+              hasNonDefinition = true;
+            }
+          });
+
+          container.appendChild(categoryDiv);
+        }
+      }
+
+      // If there are non-definition terms, add a special style
+      if (hasNonDefinition) {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          .concept-item {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background-color: rgba(74, 0, 114, 0.7);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+          }
+          .concept-name {
+            font-weight: bold;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      // הפעלת אנימציית הופעה למונחים
+      setupItemsAnimation();
+    }
+
+    // יצירת חלקיקים מרחפים
+    function createParticles() {
+      const container = document.body;
+
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+
+          // מיקום אקראי
+          const posX = Math.random() * window.innerWidth;
+          const posY = Math.random() * window.innerHeight;
+
+          // גודל אקראי
+          const size = Math.random() * 8 + 2;
+
+          // צבע אקראי בגווני סגול
+          const hue = 270 + Math.random() * 30;
+          const opacity = Math.random() * 0.5 + 0.1;
+
+          particle.style.left = posX + 'px';
+          particle.style.top = posY + 'px';
+          particle.style.width = size + 'px';
+          particle.style.height = size + 'px';
+          particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+          // הגדרת אנימציה אקראית
+          const duration = Math.random() * 10 + 5;
+          const delay = Math.random() * 5;
+
+          particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+          container.appendChild(particle);
+        }, i * 200);
+      }
+    }
+
+    // פונקצית סינון מונחים
+    function filterTerms(searchTerm) {
+      const filteredTerms = {};
+      searchTerm = searchTerm.toLowerCase();
+
+      for (const category in termsData) {
+        if (termsData.hasOwnProperty(category)) {
+          const filteredCategoryTerms = termsData[category].filter(term =>
+            term.name.toLowerCase().includes(searchTerm) ||
+            term.definition.toLowerCase().includes(searchTerm)
+          );
+
+          if (filteredCategoryTerms.length > 0) {
+            filteredTerms[category] = filteredCategoryTerms;
+          }
+        }
+      }
+      return filteredTerms;
+    }
+
+    // פונקציה להוספת אנימציית הופעה تدريجية
+    function setupItemsAnimation() {
+      const termBoxes = document.querySelectorAll('.term-box');
+      termBoxes.forEach((box, index) => {
+        box.style.opacity = 0;
+        box.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          box.style.transition = 'all 0.5s ease-in-out';
+          box.style.opacity = 1;
+          box.style.transform = 'translateY(0)';
+        }, index * 100); // עיכוב הדרגתי
+      });
+    }
+
+    // אירוע טעינת הדף
+    window.onload = () => {
+      renderTerms(); // הצגת כל המונחים
+      createParticles(); // הפעלת אנימציית חלקיקים
+      document.getElementById('search-box').addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        const filteredTerms = filterTerms(searchTerm);
+        renderTerms(filteredTerms);
+      });
+
+      // טיפול בכפתורי קטגוריות
+      document.querySelectorAll('.category-nav button').forEach(button => {
+        button.addEventListener('click', function () {
+          const category = this.dataset.category;
+          if (category === 'all') {
+            renderTerms();
+          } else {
+            const filteredTerms = {};
+            if (termsData[category]) {
+              filteredTerms[category] = termsData[category];
+            }
+            renderTerms(filteredTerms);
+          }
+        });
+      });
+
+      // טיפול בכפתורי קטגוריות
+      document.querySelectorAll('.control-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const category = this.dataset.category;
+          if (category === 'all') {
+            renderTerms();
+          } else {
+            const filteredTerms = {};
+            if (termsData[category]) {
+              filteredTerms[category] = termsData[category];
+            }
+            renderTerms(filteredTerms);
+          }
+        });
+      });
+    };
+  </script>
+</body>
+
+</html>

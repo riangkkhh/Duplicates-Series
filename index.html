@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סדרת דופליקטים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+        :root {
+            --main-color: #008080;
+            --text-color: #f6f9f9;
+            --purple: #4a0072;
+            --purple-glow: #9d00ff;
+        }
+
+        body {
+            font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('images/צילום\ מסך\ 2025-04-17\ 131825.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* שכבת אפקט קסום */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 128, 128, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 10%, rgba(0, 128, 128, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* אנימציית חלקיקים מרחפים */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* כותרת ראשית */
+        .header {
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 128, 128, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* סגנון קטגוריות */
+        .category-section {
+            margin-bottom: 3rem;
+            background-color: rgba(74, 0, 114, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+        }
+
+        .category-title {
+            font-size: 2.5rem;
+            color: var(--purple-glow);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+            position: relative;
+        }
+
+        .category-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            border-radius: 2px;
+        }
+
+        /* סגנון חדשות כמו אתר חדשות */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .main-news {
+            background-color: var(--purple);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            /* Added cursor pointer */
+            text-decoration: none;
+            /* Remove underline for links */
+            color: inherit;
+            /* Inherit color for text */
+        }
+
+        .main-news:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 0, 255, 0.4);
+        }
+
+        .main-news-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .main-news:hover .main-news-image {
+            transform: scale(1.05);
+        }
+
+        .main-news-content {
+            padding: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .main-news-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .main-news-summary {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .side-news {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .side-news-item {
+            background-color: var(--purple);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 0 10px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            cursor: pointer;
+            /* Added cursor pointer */
+            text-decoration: none;
+            /* Remove underline for links */
+            color: inherit;
+            /* Inherit color for text */
+        }
+
+        .side-news-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(157, 0, 255, 0.3);
+        }
+
+        .side-news-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .side-news-content {
+            flex: 1;
+            color: var(--text-color);
+        }
+
+        .side-news-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .side-news-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* גלריית תמונות */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-item {
+            background-color: var(--purple);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(157, 0, 255, 0.4);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* קישורים מיוחדים */
+        .special-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .special-link {
+            background-color: var(--purple);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-color);
+            display: block;
+        }
+
+        .special-link:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(157, 0, 255, 0.4);
+            color: var(--text-color);
+        }
+
+        .special-link-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .special-link-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .special-link-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .more-link {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.3);
+        }
+
+        .more-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+            color: white;
+        }
+
+        /* סמן קסום */
+        .magic-cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 128, 128, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            backdrop-filter: blur(2px);
+            display: none;
+        }
+
+        /* כותרת תחתונה */
+        footer {
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            clip-path: polygon(0% 30%, 50% 0%, 100% 30%, 100% 100%, 0% 100%);
+            padding-top: 4rem;
+        }
+
+        footer a {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* חלון צף למאמר */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--purple);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--purple-glow);
+            border: 2px solid var(--purple-glow);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--purple-glow), var(--main-color));
+            padding: 1.5rem;
+            color: white;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 2rem;
+        }
+
+        .close {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            color: var(--text-color);
+            max-height: 60vh;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .modal-body h3 {
+            color: var(--purple-glow);
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .modal-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .modal-body ul {
+            margin: 1rem 0;
+            padding-right: 2rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+
+        /* תמיכה במסכים קטנים */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-title {
+                font-size: 2rem;
+            }
+
+            .main-news-image {
+                height: 200px;
+            }
+
+            .special-links {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .category-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- אלמנט מצביע קסום -->
+    <div class="magic-cursor"></div>
+
+    <div class="header">
+        <h1>סדרת דופליקטים</h1>
+        <h2>האתר בשלבי הקמה , יכול ויהיה שכפתור כלשהוא לא יופעל.</h2>
+    </div>
+
+    <div class="container">
+        <!-- קטגוריית חידונים -->
+        <section class="category-section">
+            <h2 class="category-title">❓ חידונים</h2>
+            <h3 class="main-news-title">קטגוריה זו אינה זמינה כרגע... </h3>
+            <!-- <div class="news-grid">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSf3jUUvvtfqBRaA_K9B-8hw4m4Zud6mFZynhX-ZevIQyovXzQ/viewform"
+                    target="_blank" class="main-news">
+                    <img src="images/דופליקטים 1 הדמיה.png" alt="החידון החדש ביותר" class="main-news-image">
+                    <div class="main-news-content">
+                        <h3 class="main-news-title">מס׳ כרך : א | רמה: קשה | מחבר\ת: Moriah's dreams</h3>
+                    </div>
+                </a>
+                <div class="side-news">
+                    <a href="Duplicate1.html" class="side-news-item">
+                        <img src="images/דופליקטים 1 הדמיה.png" alt="דופליקטים 1" class="side-news-image">
+                        <div class="side-news-content">
+                            <h4 class="side-news-title">דופליקטים 1 - התגלות</h4>
+                            <span class="side-news-date">חידון על הספר הראשון</span>
+                        </div>
+                    </a>
+                    <a href="Duplicate2.html" class="side-news-item">
+                        <img src="images/דופליקטים 2 הדמיה.png" alt="דופליקטים 2 - אוצרים: כבלי החירות"
+                            class="side-news-image">
+                        <div class="side-news-content">
+                            <h4 class="side-news-title">דופליקטים 2 - אוצרים: כבלי החירות</h4>
+                            <span class="side-news-date">גישה לכל החידונים</span>
+                        </div>
+                    </a>
+                    <a href="involved.html" class="side-news-item">
+                        <img src="images/סמל דופליקטים מעורב.png" alt="חידונים מעורבים" class="side-news-image">
+                        <div class="side-news-content">
+                            <h4 class="side-news-title">חידונים מעורבים</h4>
+                            <span class="side-news-date">שאלות מכל הסדרה</span>
+                        </div>
+                    </a>
+                    <a href="everything.html" class="side-news-item">
+                        <img src="images/סמל דופליקטים מעורב.png" alt="כל החידונים" class="side-news-image">
+                        <div class="side-news-content">
+                            <h4 class="side-news-title">כל החידונים במקום אחד</h4>
+                            <span class="side-news-date">גישה לכל החידונים</span>
+                        </div>
+                    </a>
+                </div>
+            </div> -->
+        </section>
+
+        <!-- קטגוריית מאמרים -->
+        <section class="category-section">
+            <h2 class="category-title">📰 מאמרים</h2>
+            <div class="news-grid">
+                <div class="main-news" data-article-id="article1">
+                    <img src="images/סמל דופליקטים מעורב.png" alt="מאמר ראשי" class="main-news-image">
+                    <div class="main-news-content">
+                        <h3 class="main-news-title">השערות לגבי הספר!</h3>
+                        <p class="main-news-summary">מאמר מדהים עם רשימת השערות נחמדות לגבי הספר | מאת: ה.ג</p>
+                    </div>
+                </div>
+                <div class="side-news">
+                    <div class="side-news-item" data-article-id="article2">
+                        <img src="images/דופליקטים 2 הדמיה.png" alt="מאמר 1" class="side-news-image">
+                        <div class="side-news-content">
+                            <h4 class="side-news-title">דני הארט- מי אתה?</h4>
+                            <span class="side-news-date">נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2</span>
+                            <br>
+                            <strong><span class="side-news-date">מאת: בדיחת קרש</span></strong>
+                        </div>
+                    </div>
+                    </div>
+                <!-- <div style="text-align: center;">
+                    <a href="#" class="more-link">צפייה בכל המאמרים</a>
+                </div> -->
+            </div>
+        </section>
+
+        <!-- קטגוריית תמונות -->
+        <section class="category-section">
+            <h2 class="category-title">🖼️ תמונות</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="images/כדור הטונגו 1.png" alt="תמונה 1" class="gallery-image">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/זירו.jpg" alt="תמונה 2" class="gallery-image">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/סמל דופליקטים.png" alt="תמונה 3" class="gallery-image">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/ממורי צ׳יפ 1.png" alt="תמונה 4" class="gallery-image">
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="תמונות.html" class="more-link">צפייה בכל התמונות</a>
+            </div>
+        </section>
+
+        <!-- קישורים מיוחדים -->
+        <section class="category-section">
+            <div class="special-links">
+                <a href="Dictionary.html" class="special-link" target="_blank">
+                    <span class="special-link-icon">📚</span>
+                    <div class="special-link-title">מילון מונחים</div>
+                    <div class="special-link-desc">מילון מקיף של כל המונחים והמושגים בסדרה</div>
+                </a>
+
+                <a href="#" class="special-link">
+                    <span class="special-link-icon">📖</span>
+                    <div class="special-link-title">אודות הסדרה</div>
+                    <div class="special-link-desc">מידע כללי על הסדרה, המחבר והרקע ליצירה</div>
+                </a>
+
+                <a href="https://docs.google.com/forms/d/1hESBlDxx32FtY3r9MI6d-l9iIMR0CATkzUarfipxwoc/edit"
+                    class="special-link">
+                    <span class="special-link-icon">📊</span>
+                    <div class="special-link-title">סקר דופליקטים הגדול</div>
+                    <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
+                </a>
+
+
+            </div>
+        </section>
+    </div>
+
+    <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
+        <footer>
+            © 2025 סדרת דופליקטים - כל הזכויות שמורות
+            <br>
+            לתגובות ולפניות ניתן לפנות אל ai@mkifnjv.click
+        </footer>
+    </a>
+
+    <!-- חלון צף למאמר (המודאל) -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 id="modalArticleTitle" class="modal-title"></h2>
+            </div>
+            <div id="modalArticleBody" class="modal-body">
+                <!-- תוכן המאמר ייטען כאן -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // יצירת חלקיקים מרחפים
+        function createParticles() {
+            const container = document.body;
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+
+                    // מיקום אקראי
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+
+                    // גודל אקראי
+                    const size = Math.random() * 8 + 2;
+
+                    // צבע אקראי בגווני תכלת
+                    const hue = 175 + Math.random() * 10;
+                    const opacity = Math.random() * 0.5 + 0.1;
+
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                    // הגדרת אנימציה אקראית
+                    const duration = Math.random() * 10 + 5;
+                    const delay = Math.random() * 5;
+
+                    particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                    container.appendChild(particle);
+                }, i * 200);
+            }
+        }
+
+        // אפקט מצביע קסום
+        function setupMagicCursor() {
+            const cursor = document.querySelector('.magic-cursor');
+
+            if (window.matchMedia('(pointer: fine)').matches) {
+                cursor.style.display = 'block';
+
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+
+                // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
+                document.querySelectorAll('a, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        cursor.style.width = '50px';
+                        cursor.style.height = '50px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                    });
+
+                    item.addEventListener('mouseleave', () => {
+                        cursor.style.width = '30px';
+                        cursor.style.height = '30px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                    });
+                });
+            }
+        }
+
+        // הוספת אפקט אור לאלמנטים כשהם מופיעים במסך
+        function setupAnimation() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.category-section, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+        }
+
+        // --- פונקציות ונתונים עבור חלון המאמר הצף (המודאל) ---
+
+        // נתוני המאמרים המלאים
+        const articlesData = {
+            "article1": {
+                title: "השערות לגבי הספר",
+                category: "ניתוח סדרה",
+                date: "כח תמוז תשפה",
+                content: `
+                    <p>א. נראה שדוד בן הוא מקסימיליאן. הוכחות:</p>
+                    <ul>
+                        <li>אם הלן דופליקטית- כנראה שגם אחיה- בן הוא דופליקט, כיוון שכוח הדופליקטיות עובר בתורשה, ומשום מה לא מוזכר על כך כלום- דבר שמעלה את החשד בו.</li>
+                        <li>בספר השני, יש קטע שייתכן והוא מרמז על כך שמקס שומר כשרות: כשרופיו הציע לו לאכול ארנבת שהוא צד בספר השני הוא לא הסכים בתירוץ שיש לו איזו דיאטה מיוחדת שחבר לימד אותו. ומי זה החבר? מייקל! כתוב בספר הראשון שמייקל הציע לו לאכול ציפור שהוא צד והוא הסכים לאכול רק את התרנגולת. מה שמוביל לדבר הבא:</li>
+                        <li>הוא כנראה היה זה ששידך בין הלן למייקל וכך הם הכירו, כי אם לא, למה שהלן תכיר ותסכים להתחתן עם אדם שהיה בעמק השדים ( ואם היא לא ידעה על כך- אדם בלי עבר) למרות כל הסודות שלה.</li>
+                        <li>בספר השני כשהוא הלך לחפש תחבושת כדי לחבוש את דני דני נדהם מיכולת ההתמצאות שלו בבית, משמע- כנראה שהוא מ- כ- י- ר את הבית שלו.</li>
+                        <li>מקסימיליאן נפגש עם הלן כדי להביא לדני אישור להדפלקט ומשום מה הלן סומכת עליו, למרות שהיא יודעת הייטב שיש בוגדים במסדר.</li>
+                        <li> מקסימיליאן מגלה ענין וחיבה בדני ומנסה להציל את לאי בכול מחיר. למה? כנראה שהוא קרוב משפחה שלהם!
+מקסימיליאן מדי מעורב ויודע הכול הפרטים על דני ומשפחתו.
+(יכול להיות שדוד בן הוא שניהם- גם מקסימיליאן וגם בנדו {וכמו שנכתב כבר הם סקנדרים שלו-} כי הוא דמות מדי שולית מכדי להיות סתם ככה- אבל אז זה יהיה מדי צפוי.)</li>
+                    </ul>
+                   <p>ב. לדני יש עוד כוח על שלא יודעים עליו- מה שמושך אליו את זירו. הוכחות:</p>
+                    <ul>
+                        <li>כשדני היה בבית החולים בפיוצ'ר, לאחר שנפצע מהזאב, הוא ראה בחור שדומה לו והתפוגג, ובהמשך מבינים שזה כנראה היה סקנדר שלו. אבל- איך יכול להיות שהיה זה סקנדר, הרי דני עצמו היה אז סקנדר, ואם יש לו כוח על אחד- יש לו סקנדר ארצי אחד- כנראה שיש לו כוח על אולי נדיר, אולי עוצמתי ואולי ייחודי נוסף שלא יודעים עליו וזו הסיבה שהיה לו סקנדר נוסף, וגם שזירו רודף אחריו.</li>
+                    </ul>
+                    <p>ג. דני עובר בין הזמנים- בלי ידיעתו- ולא זוכר מה עשה בזמן האחר (ייתכן שאפילו השתמש אז בריקורדום). הוכחות:</p>
+                    <ul>
+                        <li>כתוב במפגש בין זירו לדני:"'"הרי אתה הייתה בבר כבר פעמיים, על אף שכוח זה אינו נמנה על כוחות העל שלך' אמר בנימה שרמזה על דבר מה".</li>
+                        <li>המצאות המקום הזה שאבנר יצר שאפשר לעבור דרכו בין זמנים- מעלה את החשד שזה אכן ה שקרה לדני.</li>
+                    </ul>
+                    <strong><p>ביקורת על הספר:</p><\strong>
+                    <strong><p>באופן כללי, ממש התלהבתי מהסדרה, הדמויות (אפילו את זירו אהבתי- כי הוא נבל מסוג אחר- שונה), העלילה, העולם הדמיוני הזה, שגם שונה וגם דומה לעולם שלנו- כבשו אותי- כאילו היה אפשר שלא להיכבש. ו- דני. אותי הוא כבש מהרגע הראשון- דמות של גיבור כל- כך...- אני לא יודעת איך להגדיר את זה, אבל הוא הצליח לדעת בי.</p><\strong>
+                    <strong><p>אכזב אותי- אולי מוזר לומר- שדני ברח כ"כ מהר מזיו, אולי אם היא הייתה משאירה אותו עוד קצת- היינו מגלים עוד דברים. וגם- שדיאו נשאר סתם ככה- בלי שגילו עליו שום דבר- לא יכול להיות שהיא כתבה עליו כ"כ הרבה - ובסוף הוא לא קשור לכלום(אבל מאוד יכול להיות שנגלה בספרים הבאים). גם הקטע עם הריקורדום לא היה ממש ברור- החוקים שלו ומי היה האחרון שהשתמש בו- ריינג'? מיאנמה? דני?</p><\strong>
+                    <strong><p>כמובן מצטרפת להכול הכתיבה המשובחת של יונה ספיר (שמי אני מבינה שאבקר אותה. אבל אני מכירה כמה אנשים, שהכירו את העלילה, ובכל זאת חזרו לקרוא שוב- רק בשביל הכתיבה שאהבו!), הכתיבה הזו, שגורמת לך להרגיש כאילו אתה שם, בלי יכולת לעזוב את הספר, להרגיש את הפחד תופס אותך- פיזית ממש, לחוש את האכזבה , הכאב, והשמחה של הדמויות, כאליו אתה חווה אותם. ( אומנם היו כמה דברים שהפריעו לי כמו שכתבו כבר על מחסור בסאב טקסט- אבל זה כבר עניין של טעם אישי- וכמובן שלא פוגם מאיכות העלילה.)</p><\strong>
+                    <strong><p>ושוב העלילה, הכתיבה המחושבת שלב שלב, ההפתעה בסוף- שלעולם לא הייתי מנחשת- לדעתי זה אחד הספרים היותר טובים של יונה ספיר, מבחינת העלילה והכתיבה, אם לא הטוב ביותר!)</p><\strong>
+                    <strong><p>הכריכה- מדהימה! אין מילים!, פשוט מושכת לקרוא את הספר מהרגע הראשון, ולא מאכזבת!</p><\strong>
+                    <strong><p>היהדות של הדמויות, לדעתי, לא הייתה מאולצת, אבל יא גם לא הייתה מולבשת טוב, הייתה פשוט חלק בלתי נפרד מהעלילה, וזה מה שהיא, אותי אישית דני מאוד חיזק, בתפילות שלו, בביטחון, במיוחד הקטע הסופי, בו הוא מדבר על הנשק החזק שיש לו- הביטחון בה'!</p><\strong>
+                    <strong><p>יונה ספיר- תודה , ושוב תודה, עליך, על מה שאת עושה, על האומץ להרים את הכפפה- ולצאת עם דבר כזה, שלא נראה עד עכשיו בציבור שלנו, למרות, שכמו שראינו יכולות להיות תגובות פחות אוהדות, הם לא רבת, וגם אלה שבתחילה פחדו, בסוף הבינו שאין כאן שום דבר- בעצם כן יש- הרבה ערכים, מידות, ו- אמונה, פשוטה וזכה. אם היית יודעת מה הספרים שלך עושים לאנשים- איך הם משנים אותם (אותי אישית הספרים שלך בנו ושינו מאוד- לטובה) היית כותבת יום וללה- בלי להפסיק.
+אז שוב תודה!! ו- מחכים כבר לספר הבא.!!!!</p><\strong>
+                `
+            },
+            "article2": {
+                title: "דֶני הארט – מי אתה?",
+                category: "נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2 מאת בדיחת קרש.",
+                date: "כח תמוז תשפה",
+                content: `<p>אופס. הודעה חדשה ב'פרוג'. אני פותח, מעוניין לראות את הנושא כמו אחד ממאות האלפים שחורשים את האתר 24 שש, ונס שלא שבע. שוב אותם כותבים מעלים אשכול חדש, בכותרתו המילה המעצבנת בעבור האחד, והקוסמת בעבור השני.
+דו – פלי – ק – טים.</p>
+                <p>ואתה, כאחד שלא יודע להגות את שמה של יונה ספיר, סופרת – העל של הסדרה הזו, רפפורט בשמה הלא – ספרותי, לא מבין את פירוש המילה. הפירוש, אגב, הוא "שני שכפולים" – דו - שתיים, פליקט – שכפול, באיזושהי שפה לא ידועה, כך על פי טרנסלייט.</p>
+                <p>אז בשבילך ובשביל כל הלוקים בבעיה הזו – הנה לך תקציר העלילה, בסגנון של קורות חיים ובשפה עשירה – ישר מהמחלבה:
+דני הארט, בחור חרדי אורתודוכסי כבן 20, בעל חוש הומור מפותח, ציני ושנון עם ביטחון עצמי גבוה. כל תשובה שיענה תתובל בהומור סרקסטי משובח.</p>
+                 <p>דני הארט, חי ב'עולם החדש', בשנת תתצ"ט, השנה הלועזית היא 2139. בשנת תתל"ט, 2109, התרחשה "המהפיכה הגדולה". בכור גרעיני חשאי במעמקי האוקיינוס, ממזרח ליבשת שנקראה עד אז "אפריקה", שנבנה ע"י אחת המדינות שהיו אז, עד היום לא ידוע מי היא, אירע פיצוץ עז עקב תקלה, שגרם להשמדת הכור, דליפת חומרים רדיואקטיבים למרחק אלפי קילומטרים, רעידות אדמה וצונאמי.</p>
+                 <p>הלוחות הטקטוניים תחת יבשת אפריקה, שהיתה הקרובה ביותר לכור, נעו במהירות, וגרמו לחיבור יבשתי עם יבשת אירופה, בנוסף לרעידות אדמה רבות עצמה שפקדו את שתי היבשות. גלי צונאמי אדירים המיסו את קרחוני הענק של אנטארקטיקה, ומאות אלפים נהרגו.</p>
+                 <p>הפיצוץ גרם גם, כאמור, לדליפת חומרים רדיואקטיביים, שפגעו לראשונה בכלבי ה'אמסטף' שהוצבו ככלבי שמירה בפתח הכור, מה שגרם להם להתנפח לממדי ענק, ומהם נולדו ה'גוליברים', טורפי ענק אכזריים וענקיים באורך של 6-9 מטרים. נפוצים בעיקר ביערות אירופה.</p>
+                 <p>גם עוף ה'אלברטוס' נפגע מהחומרים, ונולדו ממנו עופות ענקיים בגודל של פיל, בצבעי כחול-ירוק, ובנקיבות מעורב גם צבע כתום.</p>
+                 <p>אך המוזר ביותר הוא-הראש הנוסף שצמח לאלברטוסים החדשים, שזכו לכינוי "דואוסיינס", שפירושו בלועזית "בעל שני הראשים"., זוג ראשים ענקיים שיוצא מתוך צווארו של העוף הענק, בעלי מקור באורך 4 מטר, וציפורני ענק באורך מטר.
+על חורבות העולם הישן, הקימו כל המדינות את "העולם החדש", וחילקו את היבשות בצורה מחודשת:
+על איזור אסיה, נבנתה "פרדייס".</p>
+<p>אנשי פרדייס מתנגדים לפיתוחים טכנולוגיים. הם ממשיכים לנסוע ע"י סוס ועגלה לכל מקום, עובדים את השדות, מאירים את ביתם באמצעות לפידים ועששיות, ובאופן כללי, חיים בצורה פרימטיבית ללא שימוש בחפצים חשמליים בחיי היום-יום. המחשבים היחידים בפרדייס נמצאים בבתי החולים.
+    <br>
+על דגלה של פרדייס נראה סוס על רקע ירוק, ותחתיו הכיתוב "החירות לחיות בשלווה"
+</p>
+<p>על איזור אירופה נבנתה "סיים"
+<br>
+המוטו של סיים הוא שווין, והם דוגלים בעקרונות קומוניסטים. בסיים, אין עניים ועשירים. הכספים מחולקים ע"י הממשל המלוכני, בראשות המלך לורא השלישי, לכל אדם על פי כמות הנפשות בביתו, ואפילו המלך עצמו חי בדירת שלושה חדרים, כיוון שיש לו שני ילדים. כל הבתים נראים אותו דבר, ללא בתי פאר יומרניים. כולם חיים באופן זהה.
+<br>
+ביערות סיים נפוצים הגוליברים, טורפי הענק שנוצרו במהפיכה הגדולה, וגם רוב מושבות הדואוסיינסים.
+<br>
+על דגלה של סיים מופיעים, על רקע כחול, שלושה אנשים. אחד אדום, השני ירוק והשלישי-צהוב. הצבעים השונים נועדו לבטא את השוני בתכונותיהם של בני האדם, ולמרות זאת נראים כולם באותו גודל. הסלוגן שנכתב למטה: אנשים לא שווים, הם משתווים.</p>
+<p>על איזור אפריקה, נבנתה פיוצ'ר.<br>
+הפיוצ'רים, בניגוד גמור לבני פרדייס, סוגדים לטכנולוגיה, ומשתמשים באין ספור פיתוחים חדשניים.<br>
+לכל בן פיוצ'ר יש 'ציפורן דיגיטלית', שנועדה לזיהוי מהיר בכל מערכת אלקטרונית. הפיוצ'רי יציג את ציפורנו- והחיישן יזהה אותה ויקרא לפיה את כל הפרטים. הפיתוח הזה משמש אותם בבנק, במקומות העבודה, מכונות לממכר פחיות וחטיפים, ועוד.<br>
+לכל פיוצ'רי יש גם רובוט אישי, שעוזר לו במטלות הפיזיות.<br>
+הפיוצ'רים ריכזו את כל החיות שהיו ביערות במקום סגור, אותו השאירו על צורתו הטבעית, עם עצים ונחלים. את שאר הג'ונגלים והיערות הם ביראו והפכו למקומות יישוב. הם בנו "שמיים מלאכותיים" שנועדו להגן עליהם מהגשם, מהשמש וממזג אוויר קיצוני. הם בנו תעלות מיוחדות שמעבירות כל טיפת גשם אל השדות שמחוץ לפיוצ'ר, ובמקום האוויר הצח הטבעי, הציבו מערכות לסינון האוויר. מתחת לכבישים נמצאים החניונים התת-קרקעיים, כאשר כל רכב שירצה להיכנס-עליו להמתין על מקומו לזרוע המתכתית שתצא מתוך הכביש ותכניס את המכונית למטה.<br>
+בפיוצ'ר נמצא פיתוח טכנולוגי בכל כיוון, והטכנולוגיה מלווה אותם בכל צעד ושעל. המכוניות טסות במהירות על, ותיקים כבדים הופכים לקלים יותר באמצעות שבב שמצורף אליהם, שגורם לתיק לרחף בגובה נמוך. הם המציאו גם צעיף מלא וגדוש בחיישנים, שמזהים מקורות קור בצווארו של האדם הלובש אותו, ומזרים גלי חום לכיוונם. על כל בעיה וקושי שמתעוררים בחיי היום – יום, מצאו הפיוצ'רים פתרונות טכנולוגיים.<br>
+הרובוטים תפסו גם מקומות רבים ותפקידי מפתח בבתי החולים, הם מבצעים ניתוחים רבים, מהם עדינים ומסובכים, אשר יד אנושית לא מסוגלת לבצע. גם תושבי שאר המדינות נעזרים לעתים תכופות בשירותי הרפואה הפיוצ'ריים.<br>
+בני פרדייס נוהגים ללעוג לפיוצ'רים הפרזיטים, שהניחו לרובוטים לבצע כל מטלה במקומם, ואינם מנסים לפתח את יכולותיהם הפיזיות והגופניות. <br>האורתודוכסים קובלים גם על הקושי שיש בפיוצ'ר בשמירת מצוות כמו שבת, בה עליהם להיות מנותקים מכל הטכנולוגיות מסביבם. בהיעדר מקומות ודברים טבעיים כמעט, הם אינם יכולים לקיים עוד מצוות רבות. לצורך קידוש לבנה, בה צריך לראות את הירח, בנו הפיוצ'רים האורתודוכסים מגדל שבראשו יש תצפית לכיוון השמיים הטבעיים.<br>
+על דגלה של פיוצ'ר מופיע רובוט, ותחתיו הסלוגן: רובוטים אינם טועים.<br>
+על איזור אמריקה, נבנתה אינדיבידואל.<br>
+באינדיבידואל, כשמה כן היא, כל אחד חי לעצמו, ללא התערבות בחיי זולתו. אנשי אידיבידואל חפצים בפרטיות, ואינם מתערבים זה בחיי זה. השלטון הוא מלוכני, בדומה לסיים.<br>
+על דגלה של אינדיבידואל נראה כתר שחור על רקע בז'.<br>
+היבשת האחרונה מבין החמש, אוטוקרט, נבנתה באיזור אוסטרליה.<br>
+האוטוקרטים מכשירים את בניהם למשימות רבות, וכל אוטוקרטי הוא בעל הכשרה רבה בכל תחום.<br>
+בני אוטוקרט לומדים לאחוז בנשק מגיל 8, עוברים הכשרה בסיסית בכל תחום בגיל צעיר, ובגיל מבוגר יותר, בוחר כל אחד לעצמו את התחום המתאים לו בו ירצה להתמחות.<br>
+על דגלה של אוטוקרט מופיע לב שחור.<br>
+על איזור אנטארקטיקה נבנה "עמק השדים", בית הכלא הבינלאומי. לאף מדינה אין משטרה, צבא, כלא או בית משפט משל עצמה. חמש מדינות העולם הקימו יחד את יחידת ה"וורלד פייס" (שלום עולמי), שמפטרלת באיזור. כל אדם שנשפט לכלא ע"י מערכת המשפט הבינלאומית-נשלח לעמק השדים, ולפי חומרת מעשיו מחליט בית המשפט באיזה מבין האיזורים הוא ירצה את עונשו. איזור אלפא, ביתא, גמא או דלתא. אלפא הוא הקל ביותר, ודלתא הוא המסוכן והקטלני ביותר.<br>
+בין כל המדינות הוקמה רכבת ה"מטאור", שנעה במהירות 750 קילומטר לשעה על מסילות ברזל שעוברות מתחת האוקיינוס, ומחברות בין כל חמש המדינות.<br>
+דני הארט גר בבית האחרון של פרדייס, הוא בן 20, אחיו אלחנן בן 17, אחותו אלישבע בת 15, ואחותו הקטנה היא לאי-בת 8. הוריהם הם מייקל והלן הארט.
+דני הוא בעל מבנה גוף אתלטי, וכוח פיזי רב ביחס לגילו. בגיל 15 החליט אביו מייקל לשלוח אותו לנסיון, לרעות את הצאן לבדו. הוא נתן לו קרן, מעין חצוצרה, בה יתקע אם ייקלע לסכנה. כשהלך לרעות את הצאן, תקף אותו זאב. הוא נלחם בו באמצעות סמי, כלב הרועים, והזאב הספיק לנשוך אותו בצווארו. הוא תקע בעוצמה בקרן, אביו הגיע מיד על סוסו, רגילה שהזאב קפא על מקומו לפתע. עדיין הי לו דופק, אך הוא לא יכל לזוז. הוא ירה בזאב למוות, ושב לביתו עם דני הפצוע קל. מייקל סיפר להלן על התקרית עם הזאב שקפא, והיא הסבירה לדני לאחר מכן שיש לו בידיו כוח להקפיא בעלי חיים.<br>
+לאחר שחזר הביתה, גילו בני משפחתו שאינו זוכר דבר ממה שקרה אתו. הוא החל לשכוח בכל בוקר, לאחר שישן בלילה, את כל מה שקרה אתמול. הוריו נאלצו לנסוע אתו לבית חולים פיוצ'רי, למרות שנאתם לפיוצ'ר, וגם שם לא מצאו מזור למחלתו. אמו נתנה לו כדורי תרופה שעליו לבלוע כל יום, כי חייו תלויים בכך. הוא נעזר בספר עבה, בו העלה על הכתב את מה שעבר עליו באותו יום, כולל תמונות שצילם דברים שרצה לזכור, ובכל בוקר הוא קורא בספר. דודו בן, אחיה של אמו, המתגורר בפיוצ'ר, ניסה להציע לו פיתוח טכנולוגי בשם "ממורי צ'יפ", המוכנס למוח האדם וכולל את כל החומר שיכניס לשם, אך הוא והוריו סירבו.<br>
+בגיל 20 הוא הצטרף לתוכנית שנת התגלות של "גלובל", תוכנית שמרכזת צעירים בני גילו שנשלחים למשימות בכל העולם. לאחר שנה שלימה בה הם ממצים את התוכנית, הם מקבלים הפנייה למקום העבודה שלהם, כולל המלצה לפי הכישורים שהפגינו במהלך השנה.<br>
+דני הארט מוכנס לקבוצה אורתודוכסית, מתוך שתי קבוצות כאלו מתוך מאות הקבוצות. חבריו לקבוצה הם: דיויד ברוק מפיוצ'ר, שאוהב להתנצח אתו תמיד על הויכוח האידיאולוגי בין שתי המדינות, סנדי (אלכסנדר) הלר מסיים, ישי קימל מאוטוקרט ונתן מדר מאינדיבידואל.<br>
+המשימה הראשונה אליה נשלחים כל הצעירים היא על אדמת סיים, כאשר עליהם לצאת אל קיני הדואוסיינסים ולהביא משם נוצה, גוזל או ביצה. לפי מה שיצליחו להביא, ינתנו להם יותר נקודות. המשימה הקשה ביותר, אותה טרם הצליח אחד מהצעירים לבצע, היא לרכב על דואוסיינס עד למחנה 'גלובל'. לכל קבוצה מוצמד 'רוכב ברקים', האנשים המתמחים ברכיבה על דואוסיינסים, שתפקידו לאמן אותם לקראת המשימה. לקבוצתו של דני מגיע רוכב ברקים בן 30 בשם קותי. בכנס הפתיחה לשנת ההתגלות, בנאומו של פרופסור ראול אנגלר, ממנהלי התוכנית, רואה דני זבוב שעף סביב המרצה, ונזכר בכוחו להקפיא בעלי חיים. הוא חזר על התנועות שהראתה לו אמו, והזבוב קפא על מקומו וצנח על הריצפה. פרופסור אנגלר, ששם לב למתרחש, קרא לדני לאחר מכן, והסביר לו על הכוח שיש לו בידיים, הנובע מכך שהוא חבר ב"מסדר הדופליקטים".<br>
+יותר ממאתיים שנה לפני כן, בעיירה נידחת ברוסיה, חי פרופסור מיכאיל אנדרוב קאלי, פיזיקאי שהקדיש את חייו לניהול בית יתומים לילדים שהתייתמו במלחמת העולם הראשונה, שהסתיימה שנים ספורות קודם לכן.<br>
+באחד הימים, כשישב על גג בית היתומים, ראה עצם מגיח מהשמיים במהירות אדירה, ונופל ביער הסמוך. הוא ירד למטה, ונסע על אופנועו למקום הנפילה, שם גילה במרכזו של היער כדור סגול מרחף באור מיסטי. כאשר נגע בכדור, הוטח כמה מטרים קדימה, וראה את עצמו, בנוסף לגופו שעמד שם, עומד במקום אחר, כמה עשרות מטרים משם.<br>
+הוא הבין שגילה כעת סוד שהאנושות טרם גילתה, כדור שמאפשר לנוגע בו ליצור מעין כפיל של עצמו, כפיל בעל יכולות אדירות בכל תחום אפשרי. הוא חזר לבית היתומים, ונתן לעוזרו אברשה ולכל הילדים לגעת בו, והפך גם אותם לבעלי כפילים של עצמם.
+לאחר מכן, הוא ייסד את "מסדר הדופליקטים", בו חברים כל האנשים שנגעו בכדור, ולכפיל שנוצר להם קרא "סקנדר". הסקנדרים הם בעלי דם סגול. כל דופליקט יוכל לזמן את הסקנדר שלו אם יבצע את תנועות הידיים שקבע ד"ר קאלי. לכל סקנדר כוח-על אחר מבין ארבעה עשר כוחות-העל. רק למאסטר, ראש הדופליקטים, יש את כולם. דופליקט שיצא למשימה וסיים אותה בהצלחה- זכאי לקבל סקנדר נוסף, לאחר שיערך לו שימוע בבועת האוצרים, בה יוחלט איזה כוח-על חדש הוא יקבל, והכוח ינתן לו על ידי האוצר. ד"ר קאלי כתב גם את איגרת היורהמנטום, שבועת הדופליקטים, בו הוא מצווה כל דופליקט לשמור על ארבעת עקרונות היסוד של המסדר: דומיה, גבורה, הגנה, נאמנות.<br>
+דומיה: אסור לאף אדם רגיל לדעת על המסדר. כל דופליקט שיוצא למשימה ונחשף ע"י בני אנוש-אינו זכאי לקבל סקנדר נוסף, ועליו לדווח על האנשים שראו אותו, והפכו ל'רבלרים'-בני אנוש היודעים על קיומם של הדופליקטים ויכולותיהם.<br>
+גבורה: על הדופליקטים להילחם בגבורה בכל אתגר שיוצב בפניהם.<br>
+הגנה:הדופליקטים יגנו זה על זה מפני כל סכנה.<br>
+נאמנות: על הדופליקטים לגלות נאמנות מוחלטת למאסטר, והם מחויבים לפעול למען האנושות.<br>
+ד"ר קאלי יצר את בועת האוצרים, מקום משכנם של הסקנדרים, מתחת לאוקיינוס. כל "בייס"-גופו של הדופליקט, יכול להיכנס למוחו של סקנדר בועת האוצרים שלו ע"י ביצוע 'נקסום', בו עליו להיות בריכוז מקסימאלי, וכך יוכל להיכנס למוח אחר.<br>
+בנוסף לכך, ד"ר קאלי הטמין את כדור הטונגו, הכדור הסגול שגילה באירוע טונגוסקה, במעמקי הר געש באירופה, שהפכה מאז ל"סיים", כדי שרק המאסטר יוכל להזיז אותו ממקום למקום, ולצרף אנשים נוספים למסדר לפי הצורך, או להוציא ממנו דופליקטים במקרי קצה.<br>
+הוא יצר גם את הקרצ'ר, בית הכלא של הסקנדרים אליו יוכנסו סקנדרים של דופליקטים שביצעו פשעים. הסקנדר נשפט ע"י מערכת המשפט הדופליקטית, שתקצוב לו את מספר השנים בהם לא יוכל הדופליקט להשתמש בסקנדר.<br>
+הוא יצר גם את תליון ההקסגונום, התליון שמבטל כל כוח דופליקטי שנמצא בקרבתו.<br>
+הוא הקים גם את יחידת ה'קוסטדוס סילנטי', שפירושו "שומרי השתיקה", אליה משתייכים הדוקילרים, דופליקטים בעלי כוח-על של קריאת מחשבות, שתפקידם לעקוב אחרי כל הרבלרים-בני האדם שנחשפו לכוחות המסדר, ולוודא שאינם מספרים עליו לאיש. אם יראום, אותם מספרים על כך-יהרגו אותם.<br>
+פרופסור אנגלר מסביר לדני על מסדר הדופליקטים, לוקח אותו ע"י כוח-העל שלו, לעבור בזמן, אל אירוע טונגוסקה, ומראה לו את ד"ר קאלי, מייסד המסדר. הוא מסביר לו על הדרגות במסדר: יובניס, דופליקט צעיר, דרגתו של דני. אדוליטוס-מתבגר. פריטוס-מבוגר. צ'מפיון-אלוף. והדרגה הגבוהה ביותר:מאסטר, ראש הדופליקטים. הדופליקטים הם בעלי גוון סגול בעיניים, ואילו עיניו של המאסטר-סגולות לגמרי.<br>
+אנגלר מספר לדני על האויב שקם עכשיו על המסדר, טרוריסט מרושע שרוצה להשתלט על המסדר ובאמצעותו לכבוש את העולם. שמו אינו ידוע, והדופליקטים מכנים אותו 'זירו'.
+<\p>
+<strong><p>ועכשיו... רוץ לקנות ולקרוא את הספר!</p><\strong>
+                `
+            },
+            
+        };
+
+        const articleModal = document.getElementById('articleModal');
+        const modalArticleTitle = document.getElementById('modalArticleTitle');
+        const modalArticleBody = document.getElementById('modalArticleBody');
+        const closeButton = document.querySelector('.modal .close');
+
+        // פונקציה לפתיחת המודאל
+        function openModal(articleId) {
+            const article = articlesData[articleId];
+            if (article) {
+                modalArticleTitle.innerHTML = article.title;
+                modalArticleBody.innerHTML = article.content;
+                articleModal.style.display = 'block';
+            } else {
+                console.error('Article not found for ID:', articleId);
+            }
+        }
+
+        // פונקציה לסגירת המודאל
+        function closeModal() {
+            articleModal.style.display = 'none';
+            modalArticleTitle.innerHTML = ''; // מנקה את התוכן
+            modalArticleBody.innerHTML = '';   // מנקה את התוכן
+        }
+
+        // מאזינים לאירועי לחיצה על כרטיסי המאמרים
+        document.querySelectorAll('.main-news[data-article-id], .side-news-item[data-article-id]').forEach(item => {
+            item.addEventListener('click', (event) => {
+                event.preventDefault(); // מונע ניווט לדף אחר
+                const articleId = item.getAttribute('data-article-id');
+                openModal(articleId);
+            });
+        });
+
+        // מאזין לאירוע לחיצה על כפתור הסגירה
+        closeButton.addEventListener('click', closeModal);
+
+        // מאזין לאירוע לחיצה מחוץ למודאל כדי לסגור אותו
+        window.addEventListener('click', (event) => {
+            if (event.target == articleModal) {
+                closeModal();
+            }
+        });
+
+        // הפעלת הפונקציות כאשר הדף נטען
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupMagicCursor();
+            setupAnimation();
+        });
+    </script>
+</body>
+
+</html>
