@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אתר החידונים על סדרת דופליקטים</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+    :root {
+      --main-color: #008080;
+      --text-color: white;
+      --accent-color: red;
+    }
+
+    body {
+      font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('images/צילום\ מסך\ 2025-04-17\ 131825.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    /* שכבת אפקט קסום */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(0, 128, 128, 0.15) 0%, transparent 70%),
+        radial-gradient(circle at 80% 10%, rgba(0, 128, 128, 0.1) 0%, transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* אנימציית חלקיקים מרחפים */
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .header {
+      background-color: #4a0072;
+      box-shadow: 0 0 15px #9d00ff;
+      border: 1px solid #9d00ff;
+      color: white;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+      box-shadow: 0 10px 25px rgba(0, 128, 128, 0.4);
+    }
+
+    /* אפקט זוהר בכותרת */
+    .header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(0, 128, 128, 0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .items-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      /* שינוי מ-2.5rem ל-2rem כדי להתאים לשורה */
+      margin-bottom: 3rem;
+      padding: 1rem;
+    }
+
+    .item-box {
+      background-color: #4a0072;
+      box-shadow: 0 0 15px #9d00ff;
+      border: 1px solid #9d00ff;
+      border-radius: 15px;
+      overflow: hidden;
+      width: 200px;
+      /* הקטנה מ-220px ל-200px כדי שיתאים 4 בשורה */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transform: perspective(1000px) rotateY(0deg);
+    }
+
+    /* אפקט זוהר סביב הקופסאות */
+    .item-box::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, transparent, rgba(0, 128, 128, 0.3), transparent);
+      z-index: -1;
+      border-radius: 17px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .item-box:hover {
+      transform: perspective(1000px) translateY(-15px) rotateY(5deg);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15),
+        0 0 30px rgba(0, 128, 128, 0.3);
+      cursor: pointer;
+    }
+
+    .item-box:hover::before {
+      opacity: 1;
+    }
+
+    .item-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+    }
+
+    .item-box:hover .item-image {
+      transform: scale(1.05);
+    }
+
+    .item-name {
+      padding: 1.2rem 1rem;
+      text-align: center;
+      font-weight: bold;
+      color: var(--text-color);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .item-box:hover .item-name {
+      transform: translateY(-5px);
+    }
+
+    .a {
+      color: var(--accent-color);
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+    }
+
+    /* סמן קסום */
+    .magic-cursor {
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(0, 128, 128, 0.5);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, border-color 0.2s;
+      backdrop-filter: blur(2px);
+      display: none;
+    }
+
+    footer {
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 1;
+      background-color: #4a0072;
+      box-shadow: 0 0 15px #9d00ff;
+      border: 1px solid #9d00ff;
+      clip-path: polygon(0% 30%, 50% 0%, 100% 30%, 100% 100%, 0% 100%);
+      padding-top: 5rem;
+    }
+
+    footer a {
+      color: var(--text-color);
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    /* תמיכה במסכים קטנים */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .header {
+        padding: 2rem 1rem;
+      }
+
+      .items-grid {
+        gap: 1.5rem;
+      }
+
+      .item-box {
+        width: 160px;
+      }
+
+      .item-image {
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- אלמנט מצביע קסום -->
+  <div class="magic-cursor"></div>
+
+  <div class="header">
+    <a href="home.html">
+      <h1>חידונים דופליקטים 2: אוצרים כבלי החירות</h1>
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="items-grid">
+      <!-- Item 1 -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScDz0e0oxhVFJ-F2jYJ7B4A9g0qADGoHtZwpf5PKXwfi71ktQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: נשמה בוערת</div>
+      </a>
+
+      <!-- Item 2 -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgicE4eNIzL9-Rk2TIMZx6M6Dv8pkHsTIQpsCNek5Xf5mX6g/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: זיתים</div>
+      </a>
+
+      <!-- Item 3 -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdfP_t6TBq5nUbhL7tnC5rtLreoW7qVNpGcs9cM3zu7a-m_KQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: בינוני\מאת: מתלמידי הגר"א<br>
+          <span class="a">חלק א׳​</span>
+        </div>
+      </a>
+
+      <!-- Item 4 -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcUtgsHviey_xRunVMOKgUg6aXecQxWIzC5IUA6WIymtW-mQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: מתלמידי הגר"א<br>
+          <span class="a">חלק ב׳</span>
+        </div>
+      </a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKStvLxqVg1p9RiT9zpJSUCrJ_lvPr2zO2Wu2LqiOVfowJeA/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: זירו</div>
+      </a>
+    </div>
+  </div>
+
+  <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
+    <footer>
+      © 2025 אתר החידונים על סדרת דופליקטים - כל הזכויות שמורות
+    </footer>
+  </a>
+
+  <script>
+    // יצירת חלקיקים מרחפים
+    function createParticles() {
+      const container = document.body;
+
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+
+          // מיקום אקראי
+          const posX = Math.random() * window.innerWidth;
+          const posY = Math.random() * window.innerHeight;
+
+          // גודל אקראי
+          const size = Math.random() * 8 + 2;
+
+          // צבע אקראי בגווני תכלת
+          const hue = 175 + Math.random() * 10;
+          const opacity = Math.random() * 0.5 + 0.1;
+
+          particle.style.left = posX + 'px';
+          particle.style.top = posY + 'px';
+          particle.style.width = size + 'px';
+          particle.style.height = size + 'px';
+          particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+          // הגדרת אנימציה אקראית
+          const duration = Math.random() * 10 + 5;
+          const delay = Math.random() * 5;
+
+          particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+          container.appendChild(particle);
+        }, i * 200);
+      }
+    }
+
+    // אפקט מצביע קסום
+    function setupMagicCursor() {
+      const cursor = document.querySelector('.magic-cursor');
+
+      if (window.matchMedia('(pointer: fine)').matches) {
+        cursor.style.display = 'block';
+
+        document.addEventListener('mousemove', (e) => {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+        });
+
+        // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
+        document.querySelectorAll('a, .item-box').forEach(item => {
+          item.addEventListener('mouseenter', () => {
+            cursor.style.width = '50px';
+            cursor.style.height = '50px';
+            cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+          });
+
+          item.addEventListener('mouseleave', () => {
+            cursor.style.width = '30px';
+            cursor.style.height = '30px';
+            cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+          });
+        });
+      }
+    }
+
+    // הוספת אפקט אור לקופסאות כשהן מופיעות במסך
+    function setupItemsAnimation() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0) perspective(1000px) rotateY(0deg)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.item-box').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px) perspective(1000px) rotateY(5deg)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+      });
+    }
+
+    // הפעלת הפונקציות כאשר הדף נטען
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      setupMagicCursor();
+      setupItemsAnimation();
+    });
+  </script>
+</body>
+
+</html>
