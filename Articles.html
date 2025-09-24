@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאמרים - סדרת דופליקטים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+        :root {
+            --main-color: #008080;
+            --text-color: #f6f9f9;
+            --purple: #4a0072;
+            --purple-glow: #9d00ff;
+        }
+
+        body {
+            font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Placeholder image for background, as the original URL is local */
+            background-image: url('https://placehold.co/1920x1080/4a0072/f6f9f9?text=Duplikates+Background');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* שכבת אפקט קסום */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 128, 128, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 10%, rgba(0, 128, 128, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* אנימציית חלקיקים מרחפים */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* כותרת ראשית */
+        .header {
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 128, 128, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h3 {
+            color: var(--text-color);
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+            /* Ensure text is above rotating background */
+        }
+
+        .header h3:hover {
+            color: var(--purple-glow);
+            text-shadow: 0 0 15px var(--purple-glow);
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* כפתור חזרה */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+            color: white;
+        }
+
+        /* רשת מאמרים */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .article-card {
+            background-color: var(--purple);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 0, 255, 0.4);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover .article-image {
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .article-summary {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .article-category {
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            color: white;
+        }
+
+        /* חלון צף למאמר */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            /* Use flexbox for centering */
+            align-items: center;
+            /* Center vertically */
+            justify-content: center;
+            /* Center horizontally */
+        }
+
+        .modal-content {
+            background-color: var(--purple);
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            /* Changed from margin to max-height with flex centering */
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--purple-glow);
+            border: 2px solid var(--purple-glow);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--purple-glow), var(--main-color));
+            padding: 1.5rem;
+            color: white;
+            position: relative;
+            display: flex;
+            /* For aligning close button */
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 2rem;
+            /* Space for close button */
+        }
+
+        .close {
+            /* Position relative to parent flex container now */
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+            /* Only scale, no translateY as it's not absolutely positioned */
+        }
+
+        .modal-body {
+            padding: 2rem;
+            color: var(--text-color);
+            max-height: calc(80vh - 1.5rem - 1.5rem - 64px);
+            /* Adjusted for modal header height, padding. 64px is a rough estimate for header height + padding */
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        /* Scrollbar styling for modal body */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: var(--purple);
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--purple-glow);
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--main-color);
+        }
+
+
+        .modal-body h3 {
+            color: var(--purple-glow);
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .modal-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .modal-body ul {
+            margin: 1rem 0;
+            padding-right: 2rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* סמן קסום */
+        .magic-cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 128, 128, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            backdrop-filter: blur(2px);
+            /* Removed display: none; to make it visible */
+        }
+
+        /* כותרת תחתונה */
+        footer {
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            clip-path: polygon(0% 30%, 50% 0%, 100% 30%, 100% 100%, 0% 100%);
+            padding-top: 4rem;
+        }
+
+        footer a {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* תמיכה במסכים קטנים */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+                max-height: 95vh;
+            }
+
+            .modal-title {
+                font-size: 1.4rem;
+            }
+
+            .back-button {
+                top: 10px;
+                right: 10px;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+                /* Reduce padding on small screens */
+                max-height: calc(95vh - 1.5rem - 1.5rem - 64px);
+                /* Adjust for smaller modal */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="magic-cursor"></div>
+
+    <a href="home.html" class="back-button">← חזרה לעמוד הראשי</a>
+
+    <div class="header">
+        <h1>📰 מאמרים</h1>
+        <!-- Removed the link for submitting articles -->
+    </div>
+
+    <div class="container">
+        <div class="articles-grid">
+            <div class="article-card" onclick="openModal('modal1')">
+                <!-- Placeholder image, original was local -->
+                <img src="https://placehold.co/400x200/9d00ff/f6f9f9?text=Article+Image" alt="ניתוח עמוק"
+                    class="article-image">
+                <div class="article-content">
+                    <h3 class="article-title">דופליקטים העתקה מה.פ. ?</h3>
+                    <p class="article-summary">מאמר מפורט על הדמיון בין הארי פוטר לדופליקטים</p>
+                    <div class="article-meta">
+                        <span class="article-category">ניתוח ספרותי</span>
+                        <span>10 דקות קריאה</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2025 סדרת דופליקטים. כל הזכויות שמורות.</p>
+        </footer>
+    </div>
+
+    <!-- חלון צף למאמר 1 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('modal1')">&times;</span>
+                <h2 class="modal-title">דופליקטים העתקה מה.פ. ?</h2>
+            </div>
+            <div class="modal-body">
+                <h3>מבוא: דופליקטים והארי פוטר – האם יש דמיון?</h3>
+                <p>
+                    סדרת "דופליקטים" זכתה במהרה לקהל מעריצים גדול, ורבים משווים אותה לסדרת "הארי פוטר" האהובה.
+                    האם מדובר בהעתקה ישירה, או שמא בהשראה לגיטימית ובניית עולם ייחודי משלה?
+                    מאמר זה יצלול לעומק הדמיון והשוני בין שתי הסדרות הפופולריות הללו.
+                </p>
+
+                <h3>נקודות דמיון בולטות</h3>
+                <p>
+                    אין ספק שניתן למצוא מספר קווי דמיון ברורים בין "דופליקטים" ל"הארי פוטר":
+                </p>
+                <ul>
+                    <li><strong>"האחד הנבחר":</strong> בשתי הסדרות, הדמות הראשית היא יתומה בעלת גורל מיוחד,
+                        שנועדה להילחם בכוח אפל ורב עוצמה שאיים על חייה כתינוק.</li>
+                    <li><strong>בית ספר לקסמים:</strong> גם "דופליקטים" וגם "הארי פוטר" מתרחשות ברובן בבתי ספר
+                        יוקרתיים לקסמים, המכשירים תלמידים צעירים לשלוט בכוחותיהם.</li>
+                    <li><strong>שלישיית חברים:</strong> הדמויות הראשיות מוקפות בשני חברים קרובים, האחד בעל ידע רב
+                        והשני בעל אומץ לב ואישיות חזקה, היוצרים יחד צוות בלתי מנוצח.</li>
+                    <li><strong>לורד אפל:</strong> קיים אויב ראשי, לורד אפל חסר רחמים, שמטרתו להשתלט על העולם ולזרוע
+                        הרס.</li>
+                    <li><strong>חפצים קסומים:</strong> בשתי הסדרות, חפצים קסומים בעלי כוחות מיוחדים ממלאים תפקיד
+                        מרכזי בעלילה ובפתרון התעלומות.</li>
+                </ul>
+
+                <h3>הייחודיות של "דופליקטים"</h3>
+                <p>
+                    למרות הדמיון, "דופליקטים" מצליחה ליצור לעצמה זהות נפרדת ועולם עשיר ומקורי:
+                </p>
+                <ul>
+                    <li><strong>מערכת קסם שונה:</strong> בעוד שהארי פוטר מתבסס על לחשים ומקלות קסם,
+                        "דופליקטים" מציגה מערכת קסם ייחודית המתמקדת ביצירת "דופליקטים" – העתקים אנרגטיים
+                        בעלי כוחות שונים.</li>
+                    <li><strong>בניית עולם:</strong> העולם של "דופליקטים" מציג גזעים חדשים, תרבויות ייחודיות
+                        ונופים מרתקים, המעניקים לסדרה אווירה משלה.</li>
+                    <li><strong>נושאים עמוקים:</strong> הסדרה נוגעת בנושאים פילוסופיים ואתיים מורכבים יותר,
+                        כמו זהות, שיבוט, והשלכות הכוח.</li>
+                    <li><strong>טון כתיבה:</strong> ל"דופליקטים" יש טון כתיבה בוגר ומאתגר יותר, המאפשר לה
+                        לחקור היבטים אפלים ופסיכולוגיים.</li>
+                </ul>
+
+                <h3>מסקנה</h3>
+                <p>
+                    "דופליקטים" ללא ספק שואבת השראה מסדרות פנטזיה קלאסיות כמו "הארי פוטר", אך היא מצליחה
+                    להתפתח לכדי יצירה מקורית ועצמאית. הדמיון רק מדגיש את העוצמה של הנושאים הארכיטיפיים
+                    המרתקים, בעוד שהשוני הוא שמבדיל את "דופליקטים" ומוכיח את פוטנציאל ההתפתחות והחידוש
+                    שבה. מומלץ לכל חובב פנטזיה לצלול לעולם המופלא הזה ולשפוט בעצמו.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // פונקציות לפתיחה וסגירה של המודל
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex"; // Changed to flex for centering
+            document.body.style.overflow = "hidden"; // מונע גלילה ברקע
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+            document.body.style.overflow = "auto"; // מאפשר גלילה מחדש
+        }
+
+        // סגירת המודל בלחיצה מחוץ לתוכן שלו
+        window.onclick = function (event) {
+            if (event.target.classList.contains("modal")) { // Use classList.contains for modals
+                event.target.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        };
+
+        // אנימציית חלקיקים מרחפים
+        const body = document.body;
+        const particleCount = 20; // מספר החלקיקים
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5-10 שניות
+            particle.style.animationDelay = `${Math.random() * 5}s`; // עיכוב אקראי
+            body.appendChild(particle);
+        }
+
+        // Magic cursor functionality
+        const magicCursor = document.querySelector('.magic-cursor');
+        document.addEventListener('mousemove', (e) => {
+            magicCursor.style.left = `${e.clientX}px`;
+            magicCursor.style.top = `${e.clientY}px`;
+        });
+    </script>
+</body>
+
+</html>

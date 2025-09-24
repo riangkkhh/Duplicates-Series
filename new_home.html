@@ -122,96 +122,92 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 0 1rem;
             position: relative;
             z-index: 1;
         }
 
-        .items-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2.5rem;
-            margin-bottom: 3rem;
-            padding: 1rem;
-        }
-
-        .item-box {
-            background-color: #4a0072;
-            box-shadow: 0 0 15px #9d00ff;
-            border: 1px solid #9d00ff;
+        /* עיצוב דף עדכונים כמו ווצאפ */
+        .updates-container {
+            background-color: rgba(74, 0, 114, 0.9);
             border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid #9d00ff;
+            box-shadow: 0 0 15px #9d00ff;
+            margin-bottom: 3rem;
             overflow: hidden;
-            width: 220px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            transform: perspective(1000px) rotateY(0deg);
         }
 
-        /* אפקט זוהר סביב הקופסאות */
-        .item-box::before {
-            content: "";
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, transparent, rgba(0, 128, 128, 0.3), transparent);
-            z-index: -1;
-            border-radius: 17px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .update-item {
+            display: flex;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(157, 0, 255, 0.3);
+            transition: background-color 0.3s ease;
+            align-items: flex-start;
+            gap: 1rem;
         }
 
-        .item-box:hover {
-            transform: perspective(1000px) translateY(-15px) rotateY(5deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15),
-                0 0 30px rgba(0, 128, 128, 0.3);
-            cursor: pointer;
+        .update-item:hover {
+            background-color: rgba(157, 0, 255, 0.1);
         }
 
-        .item-box:hover::before {
-            opacity: 1;
+        .update-item:last-child {
+            border-bottom: none;
         }
 
-        .item-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s ease;
-            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        .update-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #9d00ff, #4a0072);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(157, 0, 255, 0.3);
         }
 
-        .item-box:hover .item-image {
-            transform: scale(1.05);
+        .update-content {
+            flex: 1;
         }
 
-        .item-name {
-            padding: 1.2rem 1rem;
-            text-align: center;
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .update-title {
             font-weight: bold;
             color: var(--text-color);
-            position: relative;
-            z-index: 1;
-            transition: transform 0.3s ease;
+            font-size: 1.1rem;
         }
 
-        .item-box:hover .item-name {
-            transform: translateY(-5px);
+        .update-time {
+            font-size: 0.85rem;
+            color: #ccc;
         }
 
-        .a {
-            color: var(--accent-color);
+        .update-text {
+            color: var(--text-color);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .update-badge {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 12px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
             font-weight: bold;
-            text-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+            margin-right: 0.5rem;
         }
 
         /* סמן קסום */
@@ -253,6 +249,55 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
+        /* אפקט קונפטי */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confetti-side-left {
+            0% {
+                transform: translateX(-100px) translateY(0) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(50vh) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confetti-side-right {
+            0% {
+                transform: translateX(100px) translateY(0) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100vw) translateY(50vh) rotateZ(-360deg);
+                opacity: 0;
+            }
+        }
+
         /* תמיכה במסכים קטנים */
         @media (max-width: 768px) {
             h1 {
@@ -263,16 +308,14 @@
                 padding: 2rem 1rem;
             }
 
-            .items-grid {
-                gap: 1.5rem;
+            .update-item {
+                padding: 1rem;
             }
 
-            .item-box {
-                width: 160px;
-            }
-
-            .item-image {
-                height: 160px;
+            .update-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -284,38 +327,42 @@
 
     <div class="header">
         <a href="home.html">
-            <h1>חידונים כלליים מכל הסדרה</h1>
+            <h1>חידונים מעורבים מכל הסדרה</h1>
         </a>
-
     </div>
 
     <div class="container">
-        <div class="items-grid">
-            <!-- Item 1 - עכשיו כקישור -->
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdlfz3r-ZLwPtx2EKWHHIDkxE6hnEcvzmFcfZFazreuk0RN8w/viewform"
-                class="item-box" target="_blank">
-                <img src="images/סמל דופליקטים מעורב.png" alt="דופליקטים 5" class="item-image">
-                <div class="item-name">דרגה: קל\מאת: נשמה בוערת</div>
-            </a>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdNXwyywCFURfuE3VyzZm8BnRWZ80bG-p0_z4wpWdtBLDun1A/viewform"
-                class="item-box" target="_blank">
-                <img src="images/סמל דופליקטים מעורב.png" alt="דופליקטים 5" class="item-image">
-                <div class="item-name">דרגה: קשה\מאת: Moriah's dreams</div>
-            </a>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSenMekES6cfTYVcVOiHJyfC72ONaVPr_kf68dsNZdQpIUxutA/viewform"
-                class="item-box" target="_blank">
-                <img src="images/סמל דופליקטים מעורב.png" alt="דופליקטים 5" class="item-image">
-                <div class="item-name">דרגה: קשה\מאת: מאסטר הדופליקטים</div>
-            </a>
-            <a href="https://docs.google.com/forms/u/2/d/e/1FAIpQLSea_uN-p73IQf7GHUE1oNfJKA5TLQQ3Ry6S7Vn_64JNQ43rhg/viewform?usp=send_form"
-                class="item-box" target="_blank">
-                <img src="images/סמל דופליקטים מעורב.png" alt="דופליקטים 5" class="item-image">
-                <div class="item-name">דרגה: בינוי\מאת: רשב"י</div>
-            </a>
+        <div class="updates-container">
+            
+            <div class="update-item">
+                <div class="update-avatar">🎯</div>
+                <div class="update-content">
+                    <div class="update-header">
+                        <div class="update-title">
+                            <span class="update-badge">חדש</span>
+                            חידון חדש נוסף לאתר!
+                        </div>
+                        <div class="update-time">ב' תשרי תשפ"ו</div>
+                    </div>
+                    <p class="update-text">נוסף חידון כללי חדש בדרגת קושי בינוני מאת "מאסטר הדופליקטים" - בואו לנסות ולראות אם אתם מכירים את הסדרה טוב מספיק!</p>
+                </div>
+            </div>
+
+            <div class="update-item">
+                <div class="update-avatar">🔥</div>
+                <div class="update-content">
+                    <div class="update-header">
+                        <span class="update-badge">עדכון באתר</span>
+                        <!-- <div class="update-title">חידון חדש נוסף לאתר!</div> -->
+                        <div class="update-time">ב' תשרי תשפ"ו</div>
+                    </div>
+                    <p class="update-text">הושק דף עידכונים לתוכן חדש באתר!</p>
+                </div>
+            </div>
 
         </div>
     </div>
-    </div>
+
     <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
         <footer>
             © 2025 אתר החידונים על סדרת דופליקטים - כל הזכויות שמורות
@@ -323,6 +370,59 @@
     </a>
 
     <script>
+        // יצירת אפקט קונפטי
+        function createConfetti(fromSides = false) {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+            const confettiCount = fromSides ? 30 : 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                const piece = document.createElement('div');
+                piece.classList.add('confetti-piece');
+                
+                // צבע אקראי
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // גודל אקראי
+                const size = Math.random() * 8 + 4;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                if (fromSides) {
+                    // קונפטי מהצדדים
+                    const isFromLeft = Math.random() > 0.5;
+                    const startY = Math.random() * window.innerHeight * 0.3;
+                    
+                    if (isFromLeft) {
+                        confetti.style.left = '0px';
+                        confetti.style.top = startY + 'px';
+                        piece.style.animation = `confetti-side-left ${Math.random() * 3 + 2}s ease-out`;
+                    } else {
+                        confetti.style.right = '0px';
+                        confetti.style.top = startY + 'px';
+                        piece.style.animation = `confetti-side-right ${Math.random() * 3 + 2}s ease-out`;
+                    }
+                } else {
+                    // קונפטי מלמעלה (לטעינה)
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-20px';
+                    piece.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear`;
+                }
+                
+                confetti.appendChild(piece);
+                document.body.appendChild(confetti);
+                
+                // הסרת הקונפטי אחרי האנימציה
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, fromSides ? 5000 : 5000);
+            }
+        }
+
         // יצירת חלקיקים מרחפים
         function createParticles() {
             const container = document.body;
@@ -373,7 +473,7 @@
                 });
 
                 // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
-                document.querySelectorAll('a, .item-box').forEach(item => {
+                document.querySelectorAll('a, .update-item').forEach(item => {
                     item.addEventListener('mouseenter', () => {
                         cursor.style.width = '50px';
                         cursor.style.height = '50px';
@@ -389,21 +489,21 @@
             }
         }
 
-        // הוספת אפקט אור לקופסאות כשהן מופיעות במסך
-        function setupItemsAnimation() {
+        // הוספת אפקט אור לעדכונים כשהם מופיעים במסך
+        function setupUpdatesAnimation() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0) perspective(1000px) rotateY(0deg)';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
             }, { threshold: 0.1 });
 
-            document.querySelectorAll('.item-box').forEach(item => {
+            document.querySelectorAll('.update-item').forEach((item, index) => {
                 item.style.opacity = '0';
-                item.style.transform = 'translateY(30px) perspective(1000px) rotateY(5deg)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
                 observer.observe(item);
             });
         }
@@ -412,7 +512,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
             setupMagicCursor();
-            setupItemsAnimation();
+            setupUpdatesAnimation();
+            
+            // קונפטי בטעינה הראשונה
+            setTimeout(() => {
+                createConfetti(false); // קונפטי מלמעלה
+            }, 500);
+            
+            // קונפטי מהצדדים כל 15 דקות (900,000 מילישניות)
+            setInterval(() => {
+                createConfetti(true); // קונפטי מהצדדים
+            }, 900000);
+            
+            // קונפטי נוסף מהצדדים אחרי 5 שניות מהטעינה הראשונה (לבדיקה)
+            setTimeout(() => {
+                createConfetti(true);
+            }, 5000);
         });
     </script>
 </body>
