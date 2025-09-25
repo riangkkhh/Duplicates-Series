@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
 
@@ -171,11 +172,8 @@
             transition: all 0.3s ease;
             position: relative;
             cursor: pointer;
-            /* Added cursor pointer */
             text-decoration: none;
-            /* Remove underline for links */
             color: inherit;
-            /* Inherit color for text */
         }
 
         .main-news:hover {
@@ -229,11 +227,8 @@
             gap: 1rem;
             align-items: center;
             cursor: pointer;
-            /* Added cursor pointer */
             text-decoration: none;
-            /* Remove underline for links */
             color: inherit;
-            /* Inherit color for text */
         }
 
         .side-news-item:hover {
@@ -264,6 +259,66 @@
         .side-news-date {
             font-size: 0.8rem;
             opacity: 0.7;
+        }
+
+        /* עיטור מיוחד לקופסת שליחת מאמרים */
+        .submission-box {
+            background: linear-gradient(135deg, rgba(157, 0, 255, 0.2), rgba(74, 0, 114, 0.3));
+            border-radius: 15px;
+            padding: 2rem;
+            border: 2px solid var(--purple-glow);
+            box-shadow: 0 0 25px rgba(157, 0, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .submission-box::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(157, 0, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+            z-index: 0;
+        }
+
+        .submission-box-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .submission-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--purple-glow);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submission-email {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            background: rgba(157, 0, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            border: 1px solid rgba(157, 0, 255, 0.4);
+        }
+
+        .submission-description {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.9;
+            line-height: 1.5;
         }
 
         /* גלריית תמונות */
@@ -506,7 +561,6 @@
             margin-bottom: 0.5rem;
         }
 
-
         /* תמיכה במסכים קטנים */
         @media (max-width: 768px) {
             h1 {
@@ -553,11 +607,7 @@
     </div>
 
     <div class="container">
-        <!-- קטגוריית חידונים -->
-        <section class="category-section">
-            <a href="new_home.html"><h2 class="category-title">🔥חדש!: לדף העדכונים</h2></a>
-        </section>
-    <div class="container">
+        <div class="container">
         <!-- קטגוריית חידונים -->
         <section class="category-section">
             <h2 class="category-title">❓ חידונים</h2>
@@ -622,10 +672,23 @@
                             <strong><span class="side-news-date">מאת: בדיחת קרש</span></strong>
                         </div>
                     </div>
+                    
+                    <!-- קופסת שליחת מאמרים עם עיטור -->
+                    <div class="submission-box">
+                        <div class="submission-box-content">
+                            <h4 class="submission-title">
+                                ✍️ שיתוף מאמרים לאתר
+                            </h4>
+                            <div class="submission-email">
+                                harry.nc38@gmail.com
+                            </div>
+                            <p class="submission-description">
+                                יש לך רעיונות מעניינים על הסדרה? השערות, תיאוריות, הערות או שאלות ותשובות?<br>
+                                נשמח לפרסם את המחשבות שלך באתר!
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <!-- <div style="text-align: center;">
-                    <a href="#" class="more-link">צפייה בכל המאמרים</a>
-                </div> -->
             </div>
         </section>
 
@@ -654,6 +717,12 @@
         <!-- קישורים מיוחדים -->
         <section class="category-section">
             <div class="special-links">
+                <a href="new_home.html"
+                    class="special-link">
+                    <span class="special-link-icon">🗞️</span>
+                    <div class="special-link-title">עדכונים על  מה שחדש באתר!</div>
+                    <div class="special-link-desc">התעדכנו בקלות על כל תוכן או שיפור חדש באתר</div>
+                </a>
                 <a href="Dictionary.html" class="special-link" target="_blank">
                     <span class="special-link-icon">📚</span>
                     <div class="special-link-title">מילון מונחים</div>
@@ -672,8 +741,6 @@
                     <div class="special-link-title">סקר דופליקטים הגדול</div>
                     <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
                 </a>
-
-
             </div>
         </section>
     </div>
@@ -682,7 +749,7 @@
         <footer>
             © 2025 סדרת דופליקטים - כל הזכויות שמורות
             <br>
-            לתגובות ולפניות ניתן לפנות אל ai@mkifnjv.click
+            לתגובות ולפניות ניתן לפנות אל harry.nc38@gmail.com
         </footer>
     </a>
 
