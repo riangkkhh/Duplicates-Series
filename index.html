@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
 
@@ -595,12 +594,79 @@
                 padding: 1rem;
             }
         }
+
+        /* רקע כהה שקוף מאחורי הפרסומת */
+        #ad-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        /* רקע כהה מאחורי הפרסומת */
+        #ad-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        /* הקופסה של הפרסומת */
+        #ad-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+            z-index: 9999;
+            padding: 12px;
+            text-align: right;
+            width: 520px;
+            height: 520px;
+        }
+
+        /* כפתור הסגירה */
+        #close-ad {
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 26px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        /* תמונת הפרסומת */
+        #ad-popup img {
+            width: 500px;
+            height: 500px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
 <body>
+    <!-- שכבת רקע -->
+    <div id="ad-overlay"></div>
+
+    <!-- הפרסומת -->
+    <div id="ad-popup">
+        <span id="close-ad">×</span>
+        <a href="https://dhoc97909.pythonanywhere.com/receiver" target="_blank">
+            <img src="images/פרסום ריבוע.gif" alt="פרסומת">
+        </a>
+    </div>
+
     <!-- אלמנט מצביע קסום -->
     <div class="magic-cursor"></div>
+
+
 
     <div class="header">
         <h1>סדרת דופליקטים</h1>
@@ -608,259 +674,282 @@
 
     <div class="container">
         <div class="container">
-        <!-- קטגוריית חידונים -->
-        <section class="category-section">
-            <h2 class="category-title">❓ חידונים</h2>
-            <h3 class="main-news-title">החידון החדש ביותר: </h3>
-            <div class="news-grid">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_uN-p73IQf7GHUE1oNfJKA5TLQQ3Ry6S7Vn_64JNQ43rhg/viewform?usp=send_form"
-                    target="_blank" class="main-news">
-                    <img src="images/דופליקטים 1 הדמיה.png" alt="החידון החדש ביותר" class="main-news-image">
-                    <div class="main-news-content">
-                        <h3 class="main-news-title">מס׳ כרך : כללי | רמה: בינוני | מחבר\ת: רשב"י</h3>
-                    </div>
-                </a>
-                <div class="side-news">
-                    <a href="Duplicate1.html" class="side-news-item">
-                        <img src="images/דופליקטים 1 הדמיה.png" alt="דופליקטים 1" class="side-news-image">
-                        <div class="side-news-content">
-                            <h4 class="side-news-title">דופליקטים 1 - התגלות</h4>
-                            <span class="side-news-date">חידון על הספר הראשון</span>
+            <!-- קטגוריית חידונים -->
+            <section class="category-section">
+                <h2 class="category-title">❓ חידונים</h2>
+                <h3 class="main-news-title">החידון החדש ביותר: </h3>
+                <div class="news-grid">
+                    <a href="https://forms.gle/cFEEeoqNBgxj2b5c7" target="_blank" class="main-news">
+                        <img src="images/דופליקטים 1 הדמיה.png" alt="החידון החדש ביותר" class="main-news-image">
+                        <div class="main-news-content">
+                            <h3 class="main-news-title">מס׳ כרך : 1 | רמה: קשה | מחבר\ת: רשב"י</h3>
                         </div>
                     </a>
-                    <a href="Duplicate2.html" class="side-news-item">
-                        <img src="images/דופליקטים 2 הדמיה.png" alt="דופליקטים 2 - אוצרים: כבלי החירות"
-                            class="side-news-image">
-                        <div class="side-news-content">
-                            <h4 class="side-news-title">דופליקטים 2 - אוצרים: כבלי החירות</h4>
-                            <span class="side-news-date">גישה לכל החידונים</span>
-                        </div>
-                    </a>
-                    <a href="involved.html" class="side-news-item">
-                        <img src="images/סמל דופליקטים מעורב.png" alt="חידונים מעורבים" class="side-news-image">
-                        <div class="side-news-content">
-                            <h4 class="side-news-title">חידונים כלליים</h4>
-                            <span class="side-news-date">שאלות מכל הסדרה</span>
-                        </div>
-                    </a>
-                    <div style="text-align: center;">
-                        <a href="חידונים.html" class="more-link">לדף החידונים המלא.</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- קטגוריית מאמרים -->
-        <section class="category-section">
-            <h2 class="category-title">📰 מאמרים</h2>
-            <div class="news-grid">
-                <div class="main-news" data-article-id="article1">
-                    <img src="images/סמל דופליקטים מעורב.png" alt="מאמר ראשי" class="main-news-image">
-                    <div class="main-news-content">
-                        <h3 class="main-news-title">השערות לגבי הספר!</h3>
-                        <p class="main-news-summary">מאמר מדהים עם רשימת השערות נחמדות לגבי הספר | מאת: ה.ג</p>
-                    </div>
-                </div>
-                <div class="side-news">
-                    <div class="side-news-item" data-article-id="article2">
-                        <img src="images/דופליקטים 2 הדמיה.png" alt="מאמר 1" class="side-news-image">
-                        <div class="side-news-content">
-                            <h4 class="side-news-title">דני הארט- מי אתה?</h4>
-                            <span class="side-news-date">נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1
-                                וחלק 2</span>
-                            <br>
-                            <strong><span class="side-news-date">מאת: בדיחת קרש</span></strong>
-                        </div>
-                    </div>
-                    
-                    <!-- קופסת שליחת מאמרים עם עיטור -->
-                    <div class="submission-box">
-                        <div class="submission-box-content">
-                            <h4 class="submission-title">
-                                ✍️ שיתוף מאמרים לאתר
-                            </h4>
-                            <div class="submission-email">
-                                harry.nc38@gmail.com
+                    <div class="side-news">
+                        <a href="Duplicate1.html" class="side-news-item">
+                            <img src="images/דופליקטים 1 הדמיה.png" alt="דופליקטים 1" class="side-news-image">
+                            <div class="side-news-content">
+                                <h4 class="side-news-title">דופליקטים 1 - התגלות</h4>
+                                <span class="side-news-date">חידון על הספר הראשון</span>
                             </div>
-                            <p class="submission-description">
-                                יש לך רעיונות מעניינים על הסדרה? השערות, תיאוריות, הערות או שאלות ותשובות?<br>
-                                נשמח לפרסם את המחשבות שלך באתר!
-                            </p>
+                        </a>
+                        <a href="Duplicate2.html" class="side-news-item">
+                            <img src="images/דופליקטים 2 הדמיה.png" alt="דופליקטים 2 - אוצרים: כבלי החירות"
+                                class="side-news-image">
+                            <div class="side-news-content">
+                                <h4 class="side-news-title">דופליקטים 2 - אוצרים: כבלי החירות</h4>
+                                <span class="side-news-date">גישה לכל החידונים</span>
+                            </div>
+                        </a>
+                        <a href="involved.html" class="side-news-item">
+                            <img src="images/סמל דופליקטים מעורב.png" alt="חידונים מעורבים" class="side-news-image">
+                            <div class="side-news-content">
+                                <h4 class="side-news-title">חידונים כלליים</h4>
+                                <span class="side-news-date">שאלות מכל הסדרה</span>
+                            </div>
+                        </a>
+                        <div style="text-align: center;">
+                            <a href="חידונים.html" class="more-link">לדף החידונים המלא.</a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- קטגוריית תמונות -->
-        <section class="category-section">
-            <h2 class="category-title">🖼️ תמונות</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="images/כדור הטונגו 1.png" alt="תמונה 1" class="gallery-image">
+            <!-- קטגוריית מאמרים -->
+            <section class="category-section">
+                <h2 class="category-title">📰 מאמרים</h2>
+                <div class="news-grid">
+                    <div class="main-news" data-article-id="article1">
+                        <img src="images/סמל דופליקטים מעורב.png" alt="מאמר ראשי" class="main-news-image">
+                        <div class="main-news-content">
+                            <h3 class="main-news-title">השערות לגבי הספר!</h3>
+                            <p class="main-news-summary">מאמר מדהים עם רשימת השערות נחמדות לגבי הספר | מאת: ה.ג</p>
+                        </div>
+                    </div>
+                    <div class="side-news">
+                        <div class="side-news-item" data-article-id="article2">
+                            <img src="images/דופליקטים 2 הדמיה.png" alt="מאמר 1" class="side-news-image">
+                            <div class="side-news-content">
+                                <h4 class="side-news-title">דני הארט- מי אתה?</h4>
+                                <span class="side-news-date">נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1
+                                    וחלק 2</span>
+                                <br>
+                                <strong><span class="side-news-date">מאת: בדיחת קרש</span></strong>
+                            </div>
+                        </div>
+
+                        <!-- קופסת שליחת מאמרים עם עיטור -->
+                        <div class="submission-box">
+                            <div class="submission-box-content">
+                                <h4 class="submission-title">
+                                    ✍️ שיתוף מאמרים לאתר
+                                </h4>
+                                <div class="submission-email">
+                                    harry.nc38@gmail.com
+                                </div>
+                                <p class="submission-description">
+                                    יש לך רעיונות מעניינים על הסדרה? השערות, תיאוריות, הערות או שאלות ותשובות?<br>
+                                    נשמח לפרסם את המחשבות שלך באתר!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="images/זירו.jpg" alt="תמונה 2" class="gallery-image">
+            </section>
+
+            <!-- קטגוריית תמונות -->
+            <section class="category-section">
+                <h2 class="category-title">🖼️ תמונות</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="images/כדור הטונגו 1.png" alt="תמונה 1" class="gallery-image">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/זירו.jpg" alt="תמונה 2" class="gallery-image">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/סמל דופליקטים.png" alt="תמונה 3" class="gallery-image">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ממורי צ׳יפ 1.png" alt="תמונה 4" class="gallery-image">
+                    </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="images/סמל דופליקטים.png" alt="תמונה 3" class="gallery-image">
+                <div style="text-align: center;">
+                    <a href="תמונות.html" class="more-link">צפייה בכל התמונות</a>
                 </div>
-                <div class="gallery-item">
-                    <img src="images/ממורי צ׳יפ 1.png" alt="תמונה 4" class="gallery-image">
+            </section>
+
+            <!-- קישורים מיוחדים -->
+            <section class="category-section">
+                <div class="special-links">
+                    <a href="new_home.html" class="special-link">
+                        <span class="special-link-icon">🗞️</span>
+                        <div class="special-link-title">עדכונים על מה שחדש באתר!</div>
+                        <div class="special-link-desc">התעדכנו בקלות על כל תוכן או שיפור חדש באתר</div>
+                    </a>
+                    <a href="Dictionary.html" class="special-link" target="_blank">
+                        <span class="special-link-icon">📚</span>
+                        <div class="special-link-title">מילון מונחים</div>
+                        <div class="special-link-desc">מילון מקיף של כל המונחים והמושגים בסדרה</div>
+                    </a>
+
+                    <a href="#" class="special-link">
+                        <span class="special-link-icon">📖</span>
+                        <div class="special-link-title">אודות הסדרה</div>
+                        <div class="special-link-desc">מידע כללי על הסדרה, המחבר והרקע ליצירה</div>
+                    </a>
+
+                    <a href="https://docs.google.com/forms/d/1hESBlDxx32FtY3r9MI6d-l9iIMR0CATkzUarfipxwoc/edit"
+                        class="special-link">
+                        <span class="special-link-icon">📊</span>
+                        <div class="special-link-title">סקר דופליקטים הגדול</div>
+                        <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
+                    </a>
                 </div>
-            </div>
-            <div style="text-align: center;">
-                <a href="תמונות.html" class="more-link">צפייה בכל התמונות</a>
-            </div>
-        </section>
+            </section>
+        </div>
 
-        <!-- קישורים מיוחדים -->
-        <section class="category-section">
-            <div class="special-links">
-                <a href="new_home.html"
-                    class="special-link">
-                    <span class="special-link-icon">🗞️</span>
-                    <div class="special-link-title">עדכונים על  מה שחדש באתר!</div>
-                    <div class="special-link-desc">התעדכנו בקלות על כל תוכן או שיפור חדש באתר</div>
-                </a>
-                <a href="Dictionary.html" class="special-link" target="_blank">
-                    <span class="special-link-icon">📚</span>
-                    <div class="special-link-title">מילון מונחים</div>
-                    <div class="special-link-desc">מילון מקיף של כל המונחים והמושגים בסדרה</div>
-                </a>
+        <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
+            <footer>
+                © 2025 סדרת דופליקטים - כל הזכויות שמורות
+                <br>
+                לתגובות ולפניות ניתן לפנות אל harry.nc38@gmail.com
+            </footer>
+        </a>
 
-                <a href="#" class="special-link">
-                    <span class="special-link-icon">📖</span>
-                    <div class="special-link-title">אודות הסדרה</div>
-                    <div class="special-link-desc">מידע כללי על הסדרה, המחבר והרקע ליצירה</div>
-                </a>
-
-                <a href="https://docs.google.com/forms/d/1hESBlDxx32FtY3r9MI6d-l9iIMR0CATkzUarfipxwoc/edit"
-                    class="special-link">
-                    <span class="special-link-icon">📊</span>
-                    <div class="special-link-title">סקר דופליקטים הגדול</div>
-                    <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
-                </a>
-            </div>
-        </section>
-    </div>
-
-    <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
-        <footer>
-            © 2025 סדרת דופליקטים - כל הזכויות שמורות
-            <br>
-            לתגובות ולפניות ניתן לפנות אל harry.nc38@gmail.com
-        </footer>
-    </a>
-
-    <!-- חלון צף למאמר (המודאל) -->
-    <div id="articleModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2 id="modalArticleTitle" class="modal-title"></h2>
-            </div>
-            <div id="modalArticleBody" class="modal-body">
-                <!-- תוכן המאמר ייטען כאן -->
+        <!-- חלון צף למאמר (המודאל) -->
+        <div id="articleModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h2 id="modalArticleTitle" class="modal-title"></h2>
+                </div>
+                <div id="modalArticleBody" class="modal-body">
+                    <!-- תוכן המאמר ייטען כאן -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // יצירת חלקיקים מרחפים
-        function createParticles() {
-            const container = document.body;
+        <script>
+            const overlay = document.getElementById("ad-overlay");
+            const popup = document.getElementById("ad-popup");
+            const close = document.getElementById("close-ad");
 
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.classList.add('particle');
-
-                    // מיקום אקראי
-                    const posX = Math.random() * window.innerWidth;
-                    const posY = Math.random() * window.innerHeight;
-
-                    // גודל אקראי
-                    const size = Math.random() * 8 + 2;
-
-                    // צבע אקראי בגווני תכלת
-                    const hue = 175 + Math.random() * 10;
-                    const opacity = Math.random() * 0.5 + 0.1;
-
-                    particle.style.left = posX + 'px';
-                    particle.style.top = posY + 'px';
-                    particle.style.width = size + 'px';
-                    particle.style.height = size + 'px';
-                    particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
-
-                    // הגדרת אנימציה אקראית
-                    const duration = Math.random() * 10 + 5;
-                    const delay = Math.random() * 5;
-
-                    particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
-
-                    container.appendChild(particle);
-                }, i * 200);
+            // פונקציה להצגת הפרסומת
+            function showAd() {
+                overlay.style.display = "block";
+                popup.style.display = "block";
             }
-        }
 
-        // אפקט מצביע קסום
-        function setupMagicCursor() {
-            const cursor = document.querySelector('.magic-cursor');
+            // פונקציה לסגירה
+            function closeAd() {
+                overlay.style.display = "none";
+                popup.style.display = "none";
+            }
 
-            if (window.matchMedia('(pointer: fine)').matches) {
-                cursor.style.display = 'block';
+            // סגירה בלחיצה על איקס או על הרקע
+            close.addEventListener("click", closeAd);
+            overlay.addEventListener("click", closeAd);
 
-                document.addEventListener('mousemove', (e) => {
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                });
+            // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
+            setTimeout(showAd, 300000);
 
-                // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
-                document.querySelectorAll('a, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
-                    item.addEventListener('mouseenter', () => {
-                        cursor.style.width = '50px';
-                        cursor.style.height = '50px';
-                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+            // הצגה חוזרת כל 20 דקות
+            setInterval(showAd, 1200000);
+            // יצירת חלקיקים מרחפים
+            function createParticles() {
+                const container = document.body;
+
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.classList.add('particle');
+
+                        // מיקום אקראי
+                        const posX = Math.random() * window.innerWidth;
+                        const posY = Math.random() * window.innerHeight;
+
+                        // גודל אקראי
+                        const size = Math.random() * 8 + 2;
+
+                        // צבע אקראי בגווני תכלת
+                        const hue = 175 + Math.random() * 10;
+                        const opacity = Math.random() * 0.5 + 0.1;
+
+                        particle.style.left = posX + 'px';
+                        particle.style.top = posY + 'px';
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                        // הגדרת אנימציה אקראית
+                        const duration = Math.random() * 10 + 5;
+                        const delay = Math.random() * 5;
+
+                        particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                        container.appendChild(particle);
+                    }, i * 200);
+                }
+            }
+
+            // אפקט מצביע קסום
+            function setupMagicCursor() {
+                const cursor = document.querySelector('.magic-cursor');
+
+                if (window.matchMedia('(pointer: fine)').matches) {
+                    cursor.style.display = 'block';
+
+                    document.addEventListener('mousemove', (e) => {
+                        cursor.style.left = e.clientX + 'px';
+                        cursor.style.top = e.clientY + 'px';
                     });
 
-                    item.addEventListener('mouseleave', () => {
-                        cursor.style.width = '30px';
-                        cursor.style.height = '30px';
-                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                    // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
+                    document.querySelectorAll('a, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                        item.addEventListener('mouseenter', () => {
+                            cursor.style.width = '50px';
+                            cursor.style.height = '50px';
+                            cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                        });
+
+                        item.addEventListener('mouseleave', () => {
+                            cursor.style.width = '30px';
+                            cursor.style.height = '30px';
+                            cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                        });
                     });
+                }
+            }
+
+            // הוספת אפקט אור לאלמנטים כשהם מופיעים במסך
+            function setupAnimation() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.category-section, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(30px)';
+                    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(item);
                 });
             }
-        }
 
-        // הוספת אפקט אור לאלמנטים כשהם מופיעים במסך
-        function setupAnimation() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
+            // --- פונקציות ונתונים עבור חלון המאמר הצף (המודאל) ---
 
-            document.querySelectorAll('.category-section, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(30px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(item);
-            });
-        }
-
-        // --- פונקציות ונתונים עבור חלון המאמר הצף (המודאל) ---
-
-        // נתוני המאמרים המלאים
-        const articlesData = {
-            "article1": {
-                title: "השערות לגבי הספר",
-                category: "ניתוח סדרה",
-                date: "כח תמוז תשפה",
-                content: `
+            // נתוני המאמרים המלאים
+            const articlesData = {
+                "article1": {
+                    title: "השערות לגבי הספר",
+                    category: "ניתוח סדרה",
+                    date: "כח תמוז תשפה",
+                    content: `
                     <p>א. נראה שדוד בן הוא מקסימיליאן. הוכחות:</p>
                     <ul>
                         <li>אם הלן דופליקטית- כנראה שגם אחיה- בן הוא דופליקט, כיוון שכוח הדופליקטיות עובר בתורשה, ומשום מה לא מוזכר על כך כלום- דבר שמעלה את החשד בו.</li>
@@ -891,12 +980,12 @@
                     <strong><p>יונה ספיר- תודה , ושוב תודה, עליך, על מה שאת עושה, על האומץ להרים את הכפפה- ולצאת עם דבר כזה, שלא נראה עד עכשיו בציבור שלנו, למרות, שכמו שראינו יכולות להיות תגובות פחות אוהדות, הם לא רבת, וגם אלה שבתחילה פחדו, בסוף הבינו שאין כאן שום דבר- בעצם כן יש- הרבה ערכים, מידות, ו- אמונה, פשוטה וזכה. אם היית יודעת מה הספרים שלך עושים לאנשים- איך הם משנים אותם (אותי אישית הספרים שלך בנו ושינו מאוד- לטובה) היית כותבת יום וללה- בלי להפסיק.
 אז שוב תודה!! ו- מחכים כבר לספר הבא.!!!!</p><\strong>
                 `
-            },
-            "article2": {
-                title: "דֶני הארט – מי אתה?",
-                category: "נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2 מאת בדיחת קרש.",
-                date: "כח תמוז תשפה",
-                content: `<p>אופס. הודעה חדשה ב'פרוג'. אני פותח, מעוניין לראות את הנושא כמו אחד ממאות האלפים שחורשים את האתר 24 שש, ונס שלא שבע. שוב אותם כותבים מעלים אשכול חדש, בכותרתו המילה המעצבנת בעבור האחד, והקוסמת בעבור השני.
+                },
+                "article2": {
+                    title: "דֶני הארט – מי אתה?",
+                    category: "נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2 מאת בדיחת קרש.",
+                    date: "כח תמוז תשפה",
+                    content: `<p>אופס. הודעה חדשה ב'פרוג'. אני פותח, מעוניין לראות את הנושא כמו אחד ממאות האלפים שחורשים את האתר 24 שש, ונס שלא שבע. שוב אותם כותבים מעלים אשכול חדש, בכותרתו המילה המעצבנת בעבור האחד, והקוסמת בעבור השני.
 דו – פלי – ק – טים.</p>
                 <p>ואתה, כאחד שלא יודע להגות את שמה של יונה ספיר, סופרת – העל של הסדרה הזו, רפפורט בשמה הלא – ספרותי, לא מבין את פירוש המילה. הפירוש, אגב, הוא "שני שכפולים" – דו - שתיים, פליקט – שכפול, באיזושהי שפה לא ידועה, כך על פי טרנסלייט.</p>
                 <p>אז בשבילך ובשביל כל הלוקים בבעיה הזו – הנה לך תקציר העלילה, בסגנון של קורות חיים ובשפה עשירה – ישר מהמחלבה:
@@ -961,60 +1050,60 @@
 <\p>
 <strong><p>ועכשיו... רוץ לקנות ולקרוא את הספר!</p><\strong>
                 `
-            },
+                },
 
-        };
+            };
 
-        const articleModal = document.getElementById('articleModal');
-        const modalArticleTitle = document.getElementById('modalArticleTitle');
-        const modalArticleBody = document.getElementById('modalArticleBody');
-        const closeButton = document.querySelector('.modal .close');
+            const articleModal = document.getElementById('articleModal');
+            const modalArticleTitle = document.getElementById('modalArticleTitle');
+            const modalArticleBody = document.getElementById('modalArticleBody');
+            const closeButton = document.querySelector('.modal .close');
 
-        // פונקציה לפתיחת המודאל
-        function openModal(articleId) {
-            const article = articlesData[articleId];
-            if (article) {
-                modalArticleTitle.innerHTML = article.title;
-                modalArticleBody.innerHTML = article.content;
-                articleModal.style.display = 'block';
-            } else {
-                console.error('Article not found for ID:', articleId);
+            // פונקציה לפתיחת המודאל
+            function openModal(articleId) {
+                const article = articlesData[articleId];
+                if (article) {
+                    modalArticleTitle.innerHTML = article.title;
+                    modalArticleBody.innerHTML = article.content;
+                    articleModal.style.display = 'block';
+                } else {
+                    console.error('Article not found for ID:', articleId);
+                }
             }
-        }
 
-        // פונקציה לסגירת המודאל
-        function closeModal() {
-            articleModal.style.display = 'none';
-            modalArticleTitle.innerHTML = ''; // מנקה את התוכן
-            modalArticleBody.innerHTML = '';   // מנקה את התוכן
-        }
+            // פונקציה לסגירת המודאל
+            function closeModal() {
+                articleModal.style.display = 'none';
+                modalArticleTitle.innerHTML = ''; // מנקה את התוכן
+                modalArticleBody.innerHTML = '';   // מנקה את התוכן
+            }
 
-        // מאזינים לאירועי לחיצה על כרטיסי המאמרים
-        document.querySelectorAll('.main-news[data-article-id], .side-news-item[data-article-id]').forEach(item => {
-            item.addEventListener('click', (event) => {
-                event.preventDefault(); // מונע ניווט לדף אחר
-                const articleId = item.getAttribute('data-article-id');
-                openModal(articleId);
+            // מאזינים לאירועי לחיצה על כרטיסי המאמרים
+            document.querySelectorAll('.main-news[data-article-id], .side-news-item[data-article-id]').forEach(item => {
+                item.addEventListener('click', (event) => {
+                    event.preventDefault(); // מונע ניווט לדף אחר
+                    const articleId = item.getAttribute('data-article-id');
+                    openModal(articleId);
+                });
             });
-        });
 
-        // מאזין לאירוע לחיצה על כפתור הסגירה
-        closeButton.addEventListener('click', closeModal);
+            // מאזין לאירוע לחיצה על כפתור הסגירה
+            closeButton.addEventListener('click', closeModal);
 
-        // מאזין לאירוע לחיצה מחוץ למודאל כדי לסגור אותו
-        window.addEventListener('click', (event) => {
-            if (event.target == articleModal) {
-                closeModal();
-            }
-        });
+            // מאזין לאירוע לחיצה מחוץ למודאל כדי לסגור אותו
+            window.addEventListener('click', (event) => {
+                if (event.target == articleModal) {
+                    closeModal();
+                }
+            });
 
-        // הפעלת הפונקציות כאשר הדף נטען
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            setupMagicCursor();
-            setupAnimation();
-        });
-    </script>
+            // הפעלת הפונקציות כאשר הדף נטען
+            document.addEventListener('DOMContentLoaded', () => {
+                createParticles();
+                setupMagicCursor();
+                setupAnimation();
+            });
+        </script>
 </body>
 
 </html>

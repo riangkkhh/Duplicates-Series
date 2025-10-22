@@ -296,10 +296,74 @@
         height: 160px;
       }
     }
+
+    /* רקע כהה שקוף מאחורי הפרסומת */
+    #ad-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
+
+    /* רקע כהה מאחורי הפרסומת */
+    #ad-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
+
+    /* הקופסה של הפרסומת */
+    #ad-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+      z-index: 9999;
+      padding: 12px;
+      text-align: right;
+      width: 520px;
+      height: 520px;
+    }
+
+    /* כפתור הסגירה */
+    #close-ad {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 26px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    /* תמונת הפרסומת */
+    #ad-popup img {
+      width: 500px;
+      height: 500px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
   </style>
 </head>
 
 <body>
+  <!-- שכבת רקע -->
+  <div id="ad-overlay"></div>
+
+  <!-- הפרסומת -->
+  <div id="ad-popup">
+    <span id="close-ad">×</span>
+    <a href="https://dhoc97909.pythonanywhere.com/receiver" target="_blank">
+      <img src="images/פרסום ריבוע.gif" alt="פרסומת">
+    </a>
+  </div>
   <!-- אלמנט מצביע קסום -->
   <div class="magic-cursor"></div>
 
@@ -361,6 +425,33 @@
   </a>
 
   <script>
+    const overlay = document.getElementById("ad-overlay");
+    const popup = document.getElementById("ad-popup");
+    const close = document.getElementById("close-ad");
+
+    // פונקציה להצגת הפרסומת
+    function showAd() {
+      overlay.style.display = "block";
+      popup.style.display = "block";
+    }
+
+    // פונקציה לסגירה
+    function closeAd() {
+      overlay.style.display = "none";
+      popup.style.display = "none";
+    }
+
+    // סגירה בלחיצה על איקס או על הרקע
+    close.addEventListener("click", closeAd);
+    overlay.addEventListener("click", closeAd);
+
+    // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
+    setTimeout(showAd, 300000);
+
+    // הצגה חוזרת כל 20 דקות
+    setInterval(showAd, 1200000);
+
+
     // פונקציה לספירת מספר החידונים הכולל ועדכון הכותרת
     function updateQuizCounter() {
       // נספור את כל החידונים בכל הדפים
