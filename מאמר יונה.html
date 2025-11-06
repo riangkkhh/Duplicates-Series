@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאמר: על אוצרים וכבליהם - דופליקטים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+        :root {
+            --main-color: #008080;
+            --text-color: #f6f9f9;
+            --purple: #4a0072;
+            --purple-glow: #9d00ff;
+            --article-bg: rgba(74, 0, 114, 0.9);
+            /* סגול כהה שקוף יותר */
+            --article-border: 1px solid var(--purple-glow);
+            --article-shadow: 0 0 20px rgba(157, 0, 255, 0.5);
+        }
+
+        body {
+            font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('images/צילום\ מסך\ 2025-04-17\ 131825.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-color);
+            /* צבע טקסט כללי */
+        }
+
+        /* שכבת אפקט קסום - נשמר */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 128, 128, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 10%, rgba(0, 128, 128, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* אנימציית חלקיקים מרחפים - נשמר ה-CSS */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* כותרת ראשית - נשמר */
+        .header {
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+            z-index: 10;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 128, 128, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* כפתור חזרה - נשמר */
+        .back-button {
+            position: absolute;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.3);
+            z-index: 2;
+            font-family: inherit;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            /* צמצום לרוחב מאמר */
+            margin: 0 auto;
+            padding: 0 1rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* עיצוב חדש לתיבת המאמר */
+        .article-box {
+            background-color: var(--article-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--article-shadow);
+            border: var(--article-border);
+            line-height: 1.8;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(5px);
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article-box:hover {
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.8);
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--purple-glow);
+            text-shadow: 0 0 10px var(--main-color);
+            border-bottom: 3px double var(--main-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--main-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-right: 4px solid var(--purple-glow);
+            padding-right: 10px;
+        }
+
+        .article-paragraph {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-color);
+            text-align: justify;
+        }
+
+        /* הדגשת שאלות/תשובות - דרמטיות */
+        .article-paragraph strong {
+            color: var(--purple-glow);
+            font-weight: 700;
+        }
+
+        .article-paragraph em {
+            color: var(--main-color);
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* סמן קסום - נשמר ה-CSS */
+        .magic-cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 128, 128, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            backdrop-filter: blur(2px);
+            display: none;
+        }
+
+        /* תמיכה במסכים קטנים - נשמר וותאם */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .back-button {
+                position: static;
+                transform: none;
+                margin-top: 1rem;
+                display: inline-block;
+            }
+
+            .header {
+                text-align: center;
+                padding-bottom: 3rem;
+            }
+
+            .article-box {
+                padding: 1.5rem;
+            }
+
+            .article-title {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .article-paragraph {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="magic-cursor"></div>
+
+    <div class="header">
+        <h1>גלריית תמונות</h1>
+        <a href="index.html" class="back-button">← חזרה</a>
+    </div>
+
+    <div class="container">
+        <div class="article-box">
+            <div class="article-title">על אוצרים וכבליהם</div>
+
+            <p class="article-paragraph">
+                מיד כשיצא הספר דופליקטים 2 או בשמו המפורט יותר <strong>"אוצרים: כבלי החירות"</strong> עלתה הבקשה
+                ממאות מיילים: "תכתבי מאמר". או יותר ברור: "תעני לשאלות".
+            </p>
+
+            <p class="article-paragraph">
+                אמרתי שאחשוב על זה.
+            </p>
+
+            <p class="article-paragraph">
+                היו הרבה עיכובים. תסריטים שכתבתי (ועדיין כותבת... תסריט זה הליך ארוךךךךך) סיפורים
+                בהמשכים, ועיקר העיקרים: דופליקטים 3 שהתחלתי לכתוב ממש מיד אחרי פסח.
+            </p>
+
+            <p class="article-paragraph">
+                התחלתי, ונשאבתי אל תוך פנטזיה מטורפת לגמרי, כך שחבל היה לי לעצור את הזרימה המהירה
+                של הרעיונות והמילים. ייקח זמן רב עד שהשלד יבשיל לספר.
+            </p>
+
+            <p class="article-paragraph">
+                השלד נמצא כעת בשלבי הקמה, עוד לא עבר אפילו משלב של שלד לסיפור ממשי. חודשים ארוכים,
+                מייגעים אך מלאי סיפוק, מפרידים בין שלד של סיפור לבין ספר עב כרס שכתוב בלשון רהוטה.
+            </p>
+
+            <p class="article-paragraph">
+                איפה היינו? אה, כן, הסיבה לעיכוב במאמר. אז מלחמת 12 הימים תרמה את חלקה – כשהילדים
+                בבית, אני נמצאת איתם בימים וכותבת בלילות. לילות שלמים ללא שינה, או עם שינה של שעתיים-
+                שלוש, כדי לעמוד בעז"ה ביעד של ספר לפסח. אין תירוצים לקהל הממתינים...
+            </p>
+
+            <p class="article-paragraph">
+                אבל המיילים דחקו והפצירו, המלחמה נגמרה, החופש הגדול הגיע וגם הסתיים, החגים שבאו לאחר
+                מכן סחפו גם הם, אבל גם הם כבר אחרינו, כך שלא נותר לי אלא לפנות כמה שעות ממקלדתי
+                העמוסה, ולנסות לענות על כמה מאלפי השאלות שנשאלתי.
+            </p>
+
+            <div class="article-subtitle">טעות מביכה ותגובות הקוראים</div>
+
+            <p class="article-paragraph">
+                קודם כל אגרופיו – הטעות המביכה והמצערת, שנפלה בשוגג ולא באשמת המגיהה המקסימה
+                שעברה על הספר לפני שהוספתי את הניקוד האוטומטי. הלחץ של הרגע האחרון הביא אותי לדלג על
+                קריאה נוספת, (מס' מאה שלושים ואחת, אבל למי אכפת? רק הקב"ה בוחן השתדלות, בני האדם
+                רוצים תוצאות!) וזה מה שקרה. מתנצלת. השבוע שקדם להוצאה לאור היה שבוע ללא שינה בכלל,
+                72 שעות מול מחשב בלי הפסקה, אבל זאת לא תשובה מספקת לקוראים נאמנים שכמוכם. מה שכן,
+                במהדורות הבאות תתוקן בעז"ה הטעות הזו ועוד כמה דומות לה.
+            </p>
+
+            <p class="article-paragraph">
+                התרעומת הנוספת שעלתה מקהל הקוראים היא שלא רק שלא עניתי לשאלות (<em>למה טהולא נתן לזירו
+                    את כדור הטונגו! למה!!!</em>) אלא הוספתי חדשות.
+            </p>
+
+            <p class="article-paragraph">
+                אז כמו שכתבתי בהקדמה לחלק 2, סדרת פנטזיה זקוקה לסבלנות ולאמון. בחלק 3 מתבררות
+                תשובות רבות יותר מאשר בחלק 2, אך כמובן נוצרות שאלות חדשות... ובכל מקרה, הסיבה של זירו-
+                טהולא תתברר לכאורה רק בחלק האחרון. אלא אם הגיבורים יפתיעו אותי וידרשו לגלות את
+                התשובה קודם לכן. גם זה קורה. הלן, למשל, התעקשה לספר את סיפור חייה כבר בחלק 3, על אף
+                שהפצרתי בה לחכות לחלק 4. עשינו פשרה: חצי בספר הזה, וחצי בחלק 4. ונחה דעתה.
+            </p>
+
+            <div class="article-subtitle">שאלות נפוצות מקהל הקוראים</div>
+
+            <p class="article-paragraph">
+                דבר שני: התנצלות עמוקה בפני אלפי שולחי המיילים ושואלי השאלות. אני חוזרת למעטים, כי ב"ה
+                העומס הולך וגדל, ולמעלה מ10,000 מיילים כבר נחתו בתיבת המייל שלי. אם אענה לכל אחד, לא
+                יהיה דופליקטים לפסח וגם לא לסוכות הבא. במיוחד כשחלק גדול מהמיילים כולל שאלות ארוכות על
+                החורים והסתירות, ואיך ייתכן שכך או אחרת. ובקשה להסברים ארוכים, מה שאין ביכולת זמני
+                הדחוק לתת.
+            </p>
+
+            <p class="article-paragraph">
+                היעדר הזמן הוא גם הסיבה שאיני נכנסת לענות לשאלות ארוכות ורבות שאני מקבלת דרך האתר
+                "פרוג" ותודה לכל השואלים והמתעניינים.
+            </p>
+
+            <p class="article-paragraph">
+                בגדול, השאלות שחזרו על עצמם היו השאלות הבאות:
+            </p>
+
+            <p class="article-paragraph">
+                <strong>למה זירו היה צריך לקשור את ידי הדופליקטים בשעה שהיה לו את התליון?</strong> התשובה הברורה
+                היא כדי שלא ידעו שיש לו את התליון. אם הדופליקטים יראו שהם לא מצליחים להדפלקט ולבצע
+                נקסום – הם ישאלו את עצמם למה. כאשר ידיהם כבולות הם לא שואלים את השאלה הזו.
+            </p>
+
+            <p class="article-paragraph">
+                <strong>למה זירו לא נהרג על ידי אנשיו?</strong> כיוון שהטיל משטר ברזל.
+                למה סטאלין\קים-ג;ונג און\חמינאי לא
+                נהרגו על ידי אנשיהם?.
+                דרוש יותר מאומץ לב כדי להרוג דיקטטור. אנשיהם אפילו לא מעזים לחשוב
+                על זה, קל וחומר לא לבצע.
+            </p>
+
+            <p class="article-paragraph">
+                <strong>ולמה הדופליקטים לא הורגים אותו?</strong> כי התליון מגן עליו מפניהם, ואמצעי הגנה תוצרת פיוצ'ר
+                מגנים
+                עליו מפני בני אנוש. האם הוא מוגן במאה אחוז? לא. אבל מוגן בערך כמו נשיא ארצות הברית בעוד
+                100 שנה... כלומר, כמו הנשיא היום, בתוספת כל היכולות הטכנולוגיות שיהיו עד אז,
+                אם חלילה לא יבוא המשיח.
+            </p>
+
+            <p class="article-paragraph">
+                <strong>מה עוד?</strong> ההקבלה המייאשת להארי פוטר, שאין בין הסדרה לבינו ולא כלום חוץ מאשר ששניהם
+                פנטזיה... והניסיונות להשוות מגוחכים (בשניהם יש גיבור ונבל! בשניהם משתמשים בידיים! בשניהם
+                יש חיות קסומות! בשניהם יש דמות חזקה טובה שעוזרת לגיבור!) כי הרי מה ששווה ביניהם שווה בין
+                דופליקטים לכל סדרת פנטזיה שהיא. האם רולינג עצמה לא שאבה השראה משר הטבעות?! היא
+                סיפרה על זה בעצמה. כמעט כל ספר שנכתב שואב השראה מספר שקדם לו.
+            </p>
+
+            <p class="article-paragraph">
+                ועוד משהו חשוב: כשם שהודיתי בגלוי שקראתי את הארי פוטר, אני מצהירה בקול רם שלא קראתי
+                שום פנטזיה נוספת. אף לא אחת. אז כל מיני ששאלו באישי אם לקחתי השראה מפנטזיות נוספות,
+                והגדילו לעשות כאלו שהצהירו שקראו "ספרים ממש דומים" לדופליקטים, אז התשובה היא לא. לא
+                קראתי שום דבר חוץ מזה. קודם כל, כי כללית אני משתדלת להימנע כליל מספרות זרה שהיא בעיניי
+                אסון רוחני, ושנית, למפרע אני מצטערת על שקראתי את הארי פוטר. הייתי צריכה לתת לעצמי
+                להבשיל לבד עם הפנטזיה...
+            </p>
+
+            <p class="article-paragraph">
+                אבל אין מה לומר, בסופו של דבר, הפנטזיה התקבלה באהדה עצומה בקרב הציבור. המהירות בה
+                לא רק אזלו הספרים – אלא השיחות שנערכות על מושגים שנשאבו מן הסדרה – הם אלו שנותנים
+                כוח להמשיך למרות המלעיזים שמתעקשים למצוא חורים, סתירות והשוואות מקוממות לסדרות
+                אחרות.
+            </p>
+
+            <p class="article-paragraph">
+                לא קל לברוא עולם ולהיצמד לכללים שקבעתי בעצמי. אבל למען כל המחזקים, הנלהבים והאוהדים –
+                שווה להמשיך.
+            </p>
+
+            <p class="article-paragraph">
+                יש הרבה סודות בקרב הדופליקטים. רובם לא התגלו עדיין, ובחלק הבא מתחילים להתגלות. מעט
+                ולאט.
+            </p>
+
+            <p class="article-paragraph">
+                יש למה לחכות, פסח תשע"ו, בעזרת השם.
+            </p>
+
+            <p class="article-paragraph"
+                style="text-align: center; margin-top: 3rem; font-style: italic; font-weight: 700; color: var(--purple-glow);">
+                ---הידפלקטות בטוחה---
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        // יצירת חלקיקים מרחפים - נשמר
+        function createParticles() {
+            const container = document.body;
+
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+                    const size = Math.random() * 6 + 2;
+                    const hue = 175 + Math.random() * 10;
+                    const opacity = Math.random() * 0.4 + 0.1;
+
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                    const duration = Math.random() * 10 + 5;
+                    const delay = Math.random() * 5;
+                    particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                    container.appendChild(particle);
+                }, i * 200);
+            }
+        }
+
+        // אפקט מצביע קסום - נשמר (מותאם לאלמנטים החדשים)
+        function setupMagicCursor() {
+            const cursor = document.querySelector('.magic-cursor');
+
+            if (window.matchMedia('(pointer: fine)').matches) {
+                cursor.style.display = 'block';
+
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+
+                document.querySelectorAll('.article-box, .back-button').forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        cursor.style.width = '50px';
+                        cursor.style.height = '50px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                    });
+
+                    item.addEventListener('mouseleave', () => {
+                        cursor.style.width = '30px';
+                        cursor.style.height = '30px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                    });
+                });
+            }
+        }
+
+        // הפעלת הפונקציות כאשר הדף נטען
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupMagicCursor();
+        });
+    </script>
+</body>
+
+</html>

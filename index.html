@@ -658,8 +658,8 @@
     <!-- הפרסומת -->
     <div id="ad-popup">
         <span id="close-ad">×</span>
-        <a href="https://dhoc97909.pythonanywhere.com/receiver" target="_blank">
-            <img src="images/פרסום ריבוע.gif" alt="פרסומת">
+        <a href="מאמר יונה.html" target="_blank">
+            <img src="images/מאמר יונה.png" alt="פרסומת">
         </a>
     </div>
 
@@ -674,6 +674,11 @@
 
     <div class="container">
         <div class="container">
+            <section class="category-section">
+                <a href="מאמר יונה.html">
+                    <h2 class="category-title"> | לחץ כאן! מאמר מיוחד מאת הסופרת י.ספיר!</h2>
+                </a>
+            </section>
             <!-- קטגוריית חידונים -->
             <section class="category-section">
                 <h2 class="category-title">❓ חידונים</h2>
@@ -852,10 +857,10 @@
             overlay.addEventListener("click", closeAd);
 
             // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
-            setTimeout(showAd, 300000);
+            setTimeout(showAd, 100000);
 
             // הצגה חוזרת כל 20 דקות
-            setInterval(showAd, 1200000);
+            setInterval(showAd, 200000);
             // יצירת חלקיקים מרחפים
             function createParticles() {
                 const container = document.body;
