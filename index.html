@@ -266,7 +266,7 @@
             border-radius: 15px;
             padding: 2rem;
             border: 2px solid var(--purple-glow);
-            box-shadow: 0 0 25px rgba(157, 0, 255, 0.3);
+            box-shadow: 0 0 25px rgba(91, 12, 140, 0.3);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -648,10 +648,69 @@
             border-radius: 10px;
             object-fit: cover;
         }
+
+        #floating-button {
+            /* מיקום ותכונות ריחוף */
+            position: fixed;
+            /* גורם לכפתור "לרחף" מעל התוכן */
+            top: 50px;
+            /* מרחק מהחלק העליון של העמוד. כוון לפי הצורך */
+            right: 30px;
+            /* מרחק מהקצה הימני. כוון לפי הצורך */
+            z-index: 1000;
+            /* מוודא שהכפתור יהיה מעל רוב האלמנטים האחרים */
+
+            /* סגנון חזותי */
+            background-color: #9644c9;
+            /* צבע סגול כהה */
+            color: white;
+            /* צבע הטקסט/אייקון */
+            width: 60px;
+            /* רוחב העיגול */
+            height: 60px;
+            /* גובה העיגול */
+            border-radius: 50%;
+            /* הופך את הריבוע לעיגול מושלם */
+            text-align: center;
+            /* ממקם את התוכן במרכז */
+            line-height: 60px;
+            /* ממקם אנכית במרכז */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* מוסיף צל קל */
+            cursor: pointer;
+            /* משנה את סמן העכבר לאצבע */
+            transition: background-color 0.3s, transform 0.3s;
+            /* אנימציה חלקה למעבר */
+            text-decoration: none;
+            /* מסיר קו תחתון מקישור */
+            display: flex;
+            /* לריכוז האייקון בצורה מדויקת יותר */
+            align-items: center;
+            /* ממקם אנכית */
+            justify-content: center;
+            /* ממקם אופקית */
+        }
+
+        #floating-button:hover {
+            background-color: #4A148C;
+            /* צבע סגול כהה יותר בריחוף */
+            transform: scale(1.05);
+            /* מגדיל מעט בריחוף */
+        }
+
+        .button-icon {
+            font-size: 30px;
+            /* גודל האמוג'י. כוון לפי הצורך */
+            line-height: 1;
+            /* מוודא שאין ריווח מיותר */
+        }
     </style>
 </head>
 
 <body>
+    <a href="new_home.html" id="floating-button" title="הודעות חדשות">
+        <span class="button-icon"><img src="images/רמקול עדכונים.png" width="55" height="55"></span>
+    </a>
     <!-- שכבת רקע -->
     <div id="ad-overlay"></div>
 
@@ -672,13 +731,10 @@
         <h1>סדרת דופליקטים</h1>
     </div>
 
+
+    </div>
     <div class="container">
         <div class="container">
-            <section class="category-section">
-                <a href="מאמר יונה.html">
-                    <h2 class="category-title"> | לחץ כאן! מאמר מיוחד מאת הסופרת י.ספיר!</h2>
-                </a>
-            </section>
             <!-- קטגוריית חידונים -->
             <section class="category-section">
                 <h2 class="category-title">❓ חידונים</h2>
@@ -744,217 +800,262 @@
                         </div>
 
                         <!-- קופסת שליחת מאמרים עם עיטור -->
-                        <div class="submission-box">
-                            <div class="submission-box-content">
-                                <h4 class="submission-title">
-                                    ✍️ שיתוף מאמרים לאתר
-                                </h4>
-                                <div class="submission-email">
-                                    harry.nc38@gmail.com
+                        <a href="מאמר יונה.html">
+                            <div class="submission-box">
+                                <div class="submission-box-content">
+                                    <h4 class="submission-title">
+                                        מאמר יחודי מאת י. ספיר !
+                                    </h4>
+                                    <div class="submission-email">
+                                        "אוצרים וכבליהם"
+                                    </div>
+                                    <p class="submission-description">
+                                        שווה לקורא!
+                                    </p>
                                 </div>
-                                <p class="submission-description">
-                                    יש לך רעיונות מעניינים על הסדרה? השערות, תיאוריות, הערות או שאלות ותשובות?<br>
-                                    נשמח לפרסם את המחשבות שלך באתר!
-                                </p>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
-            </section>
-
-            <!-- קטגוריית תמונות -->
-            <section class="category-section">
-                <h2 class="category-title">🖼️ תמונות</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="images/כדור הטונגו 1.png" alt="תמונה 1" class="gallery-image">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/זירו.jpg" alt="תמונה 2" class="gallery-image">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/סמל דופליקטים.png" alt="תמונה 3" class="gallery-image">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/ממורי צ׳יפ 1.png" alt="תמונה 4" class="gallery-image">
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <a href="תמונות.html" class="more-link">צפייה בכל התמונות</a>
-                </div>
-            </section>
-
-            <!-- קישורים מיוחדים -->
-            <section class="category-section">
-                <div class="special-links">
-                    <a href="new_home.html" class="special-link">
-                        <span class="special-link-icon">🗞️</span>
-                        <div class="special-link-title">עדכונים על מה שחדש באתר!</div>
-                        <div class="special-link-desc">התעדכנו בקלות על כל תוכן או שיפור חדש באתר</div>
-                    </a>
-                    <a href="Dictionary.html" class="special-link" target="_blank">
-                        <span class="special-link-icon">📚</span>
-                        <div class="special-link-title">מילון מונחים</div>
-                        <div class="special-link-desc">מילון מקיף של כל המונחים והמושגים בסדרה</div>
-                    </a>
-
-                    <a href="#" class="special-link">
-                        <span class="special-link-icon">📖</span>
-                        <div class="special-link-title">אודות הסדרה</div>
-                        <div class="special-link-desc">מידע כללי על הסדרה, המחבר והרקע ליצירה</div>
-                    </a>
-
-                    <a href="https://docs.google.com/forms/d/1hESBlDxx32FtY3r9MI6d-l9iIMR0CATkzUarfipxwoc/edit"
-                        class="special-link">
-                        <span class="special-link-icon">📊</span>
-                        <div class="special-link-title">סקר דופליקטים הגדול</div>
-                        <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
-                    </a>
-                </div>
-            </section>
         </div>
+        </section>
 
-        <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
-            <footer>
-                © 2025 סדרת דופליקטים - כל הזכויות שמורות
-                <br>
-                לתגובות ולפניות ניתן לפנות אל harry.nc38@gmail.com
-            </footer>
-        </a>
-
-        <!-- חלון צף למאמר (המודאל) -->
-        <div id="articleModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">&times;</span>
-                    <h2 id="modalArticleTitle" class="modal-title"></h2>
+        <!-- קטגוריית תמונות -->
+        <section class="category-section">
+            <h2 class="category-title">🖼️ תמונות</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="images/כדור הטונגו 1.png" alt="תמונה 1" class="gallery-image">
                 </div>
-                <div id="modalArticleBody" class="modal-body">
-                    <!-- תוכן המאמר ייטען כאן -->
+                <div class="gallery-item">
+                    <img src="images/זירו.jpg" alt="תמונה 2" class="gallery-image">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/סמל דופליקטים 3d.jpg" alt="תמונה 3" class="gallery-image">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/ממורי צ׳יפ 1.png" alt="תמונה 4" class="gallery-image">
                 </div>
             </div>
-        </div>
+            <div style="text-align: center;">
+                <a href="תמונות.html" class="more-link">צפייה בכל התמונות</a>
+            </div>
+        </section>
+        <section class="category-section">
+            <h2 class="category-title">🎬 וידיאו</h2>
+            <h2>בקרוב!</h2>
+            <div class="submission-box">
+                <div class="submission-box-content">
+                    <h4 class="submission-title">
+                        שליחת סרטונים:
+                    </h4>
+                    <div class="submission-email">
+                        harry.nc38@gmail.com
+                    </div>
+                    <p class="submission-description">
+                        שלחו לנו סרטונים כשרים של סצנות מהסדרה.
+                    </p>
+                </div>
 
-        <script>
-            const overlay = document.getElementById("ad-overlay");
-            const popup = document.getElementById("ad-popup");
-            const close = document.getElementById("close-ad");
+            </div>
+            <div style="text-align: center;">
+                <a href="סרטונים.html" class="more-link">צפייה בכל הסרטונים<div class=""></div></a>
+            </div>
+        </section>
 
-            // פונקציה להצגת הפרסומת
-            function showAd() {
-                overlay.style.display = "block";
-                popup.style.display = "block";
-            }
+        <!-- קישורים מיוחדים -->
+        <section class="category-section">
+            <div class="special-links">
+                <a href="Dictionary.html" class="special-link" target="_blank">
+                    <span class="special-link-icon">📚</span>
+                    <div class="special-link-title">מילון מונחים : אוצרים כבלי החירות</div>
+                    <div class="special-link-desc"> מילון מקיף של כל המונחים והמושגים בחלק 2</div>
+                </a>
+                <a href="Dictionary.html" class="special-link" target="_blank">
+                    <span class="special-link-icon">📚</span>
+                    <div class="special-link-title">מילון מונחים : התגלות</div>
+                    <div class="special-link-desc">מילון מקיף של כל המונחים והמושגים בחלק 1</div>
+                </a>
 
-            // פונקציה לסגירה
-            function closeAd() {
-                overlay.style.display = "none";
-                popup.style.display = "none";
-            }
+                <a href="#" class="special-link">
+                    <span class="special-link-icon">📖</span>
+                    <div class="special-link-title">אודות הסדרה</div>
+                    <div class="special-link-desc">מידע כללי על הסדרה, המחבר והרקע ליצירה</div>
+                </a>
 
-            // סגירה בלחיצה על איקס או על הרקע
-            close.addEventListener("click", closeAd);
-            overlay.addEventListener("click", closeAd);
+                <a href="https://docs.google.com/forms/d/1hESBlDxx32FtY3r9MI6d-l9iIMR0CATkzUarfipxwoc/edit"
+                    class="special-link">
+                    <span class="special-link-icon">📊</span>
+                    <div class="special-link-title">סקר דופליקטים הגדול</div>
+                    <div class="special-link-desc">השתתפו בסקר המקיף על הסדרה</div>
+                </a>
+            </div>
+        </section>
+    </div>
+    <div class="contact-form-container">
+        <div class="submission-box-content">
 
-            // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
-            setTimeout(showAd, 100000);
+            <div class="submission-box">
+                <h4 class="submission-title">
+                    משתמש יקר!
+                    <br>
+                    אנא קרא את זה ! :
+                </h4>
+                <p class="submission-description">
+                    אם הגעת לפה, כנראה שעברת כבר על כככככללל האתר.! <br>
+                    אנו עושים מאמצים כדי לתת לכם את מירב הסיפוק והכיף והתוכן. <br>
+                    על כן נשמח לפידקבקים תגובות ושיתופים , ניתן גם לשלוח מאמרים, חידונים בטופסי פרומס, ותמונות
+                    מיוחדות
+                    בAI .
+                    <br> הכל למייל הזה:
+                </p>
+                <div class="submission-email">
+                    harry.nc38@gmail.com
+                </div>
 
-            // הצגה חוזרת כל 20 דקות
-            setInterval(showAd, 200000);
-            // יצירת חלקיקים מרחפים
-            function createParticles() {
-                const container = document.body;
+            </div>
 
-                for (let i = 0; i < 20; i++) {
-                    setTimeout(() => {
-                        const particle = document.createElement('div');
-                        particle.classList.add('particle');
 
-                        // מיקום אקראי
-                        const posX = Math.random() * window.innerWidth;
-                        const posY = Math.random() * window.innerHeight;
+            <a href="https://www.prog.co.il/members/%D7%90%D7%95%D7%94%D7%93-%D7%94ai.131727/">
+                <footer>
+                    © 2025 סדרת דופליקטים - כל הזכויות שמורות
+                    <br>
+                    לתגובות ולפניות ניתן לפנות אל harry.nc38@gmail.com
+                </footer>
+            </a>
 
-                        // גודל אקראי
-                        const size = Math.random() * 8 + 2;
+            <!-- חלון צף למאמר (המודאל) -->
+            <div id="articleModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">&times;</span>
+                        <h2 id="modalArticleTitle" class="modal-title"></h2>
+                    </div>
+                    <div id="modalArticleBody" class="modal-body">
+                        <!-- תוכן המאמר ייטען כאן -->
+                    </div>
+                </div>
+            </div>
 
-                        // צבע אקראי בגווני תכלת
-                        const hue = 175 + Math.random() * 10;
-                        const opacity = Math.random() * 0.5 + 0.1;
+            <script>
+                const overlay = document.getElementById("ad-overlay");
+                const popup = document.getElementById("ad-popup");
+                const close = document.getElementById("close-ad");
 
-                        particle.style.left = posX + 'px';
-                        particle.style.top = posY + 'px';
-                        particle.style.width = size + 'px';
-                        particle.style.height = size + 'px';
-                        particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
-
-                        // הגדרת אנימציה אקראית
-                        const duration = Math.random() * 10 + 5;
-                        const delay = Math.random() * 5;
-
-                        particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
-
-                        container.appendChild(particle);
-                    }, i * 200);
+                // פונקציה להצגת הפרסומת
+                function showAd() {
+                    overlay.style.display = "block";
+                    popup.style.display = "block";
                 }
-            }
 
-            // אפקט מצביע קסום
-            function setupMagicCursor() {
-                const cursor = document.querySelector('.magic-cursor');
+                // פונקציה לסגירה
+                function closeAd() {
+                    overlay.style.display = "none";
+                    popup.style.display = "none";
+                }
 
-                if (window.matchMedia('(pointer: fine)').matches) {
-                    cursor.style.display = 'block';
+                // סגירה בלחיצה על איקס או על הרקע
+                close.addEventListener("click", closeAd);
+                overlay.addEventListener("click", closeAd);
 
-                    document.addEventListener('mousemove', (e) => {
-                        cursor.style.left = e.clientX + 'px';
-                        cursor.style.top = e.clientY + 'px';
-                    });
+                // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
+                setTimeout(showAd, 100000);
 
-                    // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
-                    document.querySelectorAll('a, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
-                        item.addEventListener('mouseenter', () => {
-                            cursor.style.width = '50px';
-                            cursor.style.height = '50px';
-                            cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                // הצגה חוזרת כל 20 דקות
+                setInterval(showAd, 200000);
+                // יצירת חלקיקים מרחפים
+                function createParticles() {
+                    const container = document.body;
+
+                    for (let i = 0; i < 20; i++) {
+                        setTimeout(() => {
+                            const particle = document.createElement('div');
+                            particle.classList.add('particle');
+
+                            // מיקום אקראי
+                            const posX = Math.random() * window.innerWidth;
+                            const posY = Math.random() * window.innerHeight;
+
+                            // גודל אקראי
+                            const size = Math.random() * 8 + 2;
+
+                            // צבע אקראי בגווני תכלת
+                            const hue = 175 + Math.random() * 10;
+                            const opacity = Math.random() * 0.5 + 0.1;
+
+                            particle.style.left = posX + 'px';
+                            particle.style.top = posY + 'px';
+                            particle.style.width = size + 'px';
+                            particle.style.height = size + 'px';
+                            particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                            // הגדרת אנימציה אקראית
+                            const duration = Math.random() * 10 + 5;
+                            const delay = Math.random() * 5;
+
+                            particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                            container.appendChild(particle);
+                        }, i * 200);
+                    }
+                }
+
+                // אפקט מצביע קסום
+                function setupMagicCursor() {
+                    const cursor = document.querySelector('.magic-cursor');
+
+                    if (window.matchMedia('(pointer: fine)').matches) {
+                        cursor.style.display = 'block';
+
+                        document.addEventListener('mousemove', (e) => {
+                            cursor.style.left = e.clientX + 'px';
+                            cursor.style.top = e.clientY + 'px';
                         });
 
-                        item.addEventListener('mouseleave', () => {
-                            cursor.style.width = '30px';
-                            cursor.style.height = '30px';
-                            cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                        // הגדלת הסמן על מעבר מעל אלמנטים אינטראקטיביים
+                        document.querySelectorAll('a, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                            item.addEventListener('mouseenter', () => {
+                                cursor.style.width = '50px';
+                                cursor.style.height = '50px';
+                                cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                            });
+
+                            item.addEventListener('mouseleave', () => {
+                                cursor.style.width = '30px';
+                                cursor.style.height = '30px';
+                                cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                            });
                         });
+                    }
+                }
+
+                // הוספת אפקט אור לאלמנטים כשהם מופיעים במסך
+                function setupAnimation() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    document.querySelectorAll('.category-section, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(30px)';
+                        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        observer.observe(item);
                     });
                 }
-            }
 
-            // הוספת אפקט אור לאלמנטים כשהם מופיעים במסך
-            function setupAnimation() {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }
-                    });
-                }, { threshold: 0.1 });
+                // --- פונקציות ונתונים עבור חלון המאמר הצף (המודאל) ---
 
-                document.querySelectorAll('.category-section, .main-news, .side-news-item, .gallery-item, .special-link').forEach(item => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(30px)';
-                    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    observer.observe(item);
-                });
-            }
-
-            // --- פונקציות ונתונים עבור חלון המאמר הצף (המודאל) ---
-
-            // נתוני המאמרים המלאים
-            const articlesData = {
-                "article1": {
-                    title: "השערות לגבי הספר",
-                    category: "ניתוח סדרה",
-                    date: "כח תמוז תשפה",
-                    content: `
+                // נתוני המאמרים המלאים
+                const articlesData = {
+                    "article1": {
+                        title: "השערות לגבי הספר",
+                        category: "ניתוח סדרה",
+                        date: "כח תמוז תשפה",
+                        content: `
                     <p>א. נראה שדוד בן הוא מקסימיליאן. הוכחות:</p>
                     <ul>
                         <li>אם הלן דופליקטית- כנראה שגם אחיה- בן הוא דופליקט, כיוון שכוח הדופליקטיות עובר בתורשה, ומשום מה לא מוזכר על כך כלום- דבר שמעלה את החשד בו.</li>
@@ -985,12 +1086,12 @@
                     <strong><p>יונה ספיר- תודה , ושוב תודה, עליך, על מה שאת עושה, על האומץ להרים את הכפפה- ולצאת עם דבר כזה, שלא נראה עד עכשיו בציבור שלנו, למרות, שכמו שראינו יכולות להיות תגובות פחות אוהדות, הם לא רבת, וגם אלה שבתחילה פחדו, בסוף הבינו שאין כאן שום דבר- בעצם כן יש- הרבה ערכים, מידות, ו- אמונה, פשוטה וזכה. אם היית יודעת מה הספרים שלך עושים לאנשים- איך הם משנים אותם (אותי אישית הספרים שלך בנו ושינו מאוד- לטובה) היית כותבת יום וללה- בלי להפסיק.
 אז שוב תודה!! ו- מחכים כבר לספר הבא.!!!!</p><\strong>
                 `
-                },
-                "article2": {
-                    title: "דֶני הארט – מי אתה?",
-                    category: "נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2 מאת בדיחת קרש.",
-                    date: "כח תמוז תשפה",
-                    content: `<p>אופס. הודעה חדשה ב'פרוג'. אני פותח, מעוניין לראות את הנושא כמו אחד ממאות האלפים שחורשים את האתר 24 שש, ונס שלא שבע. שוב אותם כותבים מעלים אשכול חדש, בכותרתו המילה המעצבנת בעבור האחד, והקוסמת בעבור השני.
+                    },
+                    "article2": {
+                        title: "דֶני הארט – מי אתה?",
+                        category: "נכתב לטובת הללו שעוד לא קראו את הספר המהמם דופליקטים, חלק 1 וחלק 2 מאת בדיחת קרש.",
+                        date: "כח תמוז תשפה",
+                        content: `<p>אופס. הודעה חדשה ב'פרוג'. אני פותח, מעוניין לראות את הנושא כמו אחד ממאות האלפים שחורשים את האתר 24 שש, ונס שלא שבע. שוב אותם כותבים מעלים אשכול חדש, בכותרתו המילה המעצבנת בעבור האחד, והקוסמת בעבור השני.
 דו – פלי – ק – טים.</p>
                 <p>ואתה, כאחד שלא יודע להגות את שמה של יונה ספיר, סופרת – העל של הסדרה הזו, רפפורט בשמה הלא – ספרותי, לא מבין את פירוש המילה. הפירוש, אגב, הוא "שני שכפולים" – דו - שתיים, פליקט – שכפול, באיזושהי שפה לא ידועה, כך על פי טרנסלייט.</p>
                 <p>אז בשבילך ובשביל כל הלוקים בבעיה הזו – הנה לך תקציר העלילה, בסגנון של קורות חיים ובשפה עשירה – ישר מהמחלבה:
@@ -1055,60 +1156,61 @@
 <\p>
 <strong><p>ועכשיו... רוץ לקנות ולקרוא את הספר!</p><\strong>
                 `
-                },
+                    },
 
-            };
+                };
 
-            const articleModal = document.getElementById('articleModal');
-            const modalArticleTitle = document.getElementById('modalArticleTitle');
-            const modalArticleBody = document.getElementById('modalArticleBody');
-            const closeButton = document.querySelector('.modal .close');
+                const articleModal = document.getElementById('articleModal');
+                const modalArticleTitle = document.getElementById('modalArticleTitle');
+                const modalArticleBody = document.getElementById('modalArticleBody');
+                const closeButton = document.querySelector('.modal .close');
 
-            // פונקציה לפתיחת המודאל
-            function openModal(articleId) {
-                const article = articlesData[articleId];
-                if (article) {
-                    modalArticleTitle.innerHTML = article.title;
-                    modalArticleBody.innerHTML = article.content;
-                    articleModal.style.display = 'block';
-                } else {
-                    console.error('Article not found for ID:', articleId);
+                // פונקציה לפתיחת המודאל
+                function openModal(articleId) {
+                    const article = articlesData[articleId];
+                    if (article) {
+                        modalArticleTitle.innerHTML = article.title;
+                        modalArticleBody.innerHTML = article.content;
+                        articleModal.style.display = 'block';
+                    } else {
+                        console.error('Article not found for ID:', articleId);
+                    }
                 }
-            }
 
-            // פונקציה לסגירת המודאל
-            function closeModal() {
-                articleModal.style.display = 'none';
-                modalArticleTitle.innerHTML = ''; // מנקה את התוכן
-                modalArticleBody.innerHTML = '';   // מנקה את התוכן
-            }
+                // פונקציה לסגירת המודאל
+                function closeModal() {
+                    articleModal.style.display = 'none';
+                    modalArticleTitle.innerHTML = ''; // מנקה את התוכן
+                    modalArticleBody.innerHTML = '';   // מנקה את התוכן
+                }
 
-            // מאזינים לאירועי לחיצה על כרטיסי המאמרים
-            document.querySelectorAll('.main-news[data-article-id], .side-news-item[data-article-id]').forEach(item => {
-                item.addEventListener('click', (event) => {
-                    event.preventDefault(); // מונע ניווט לדף אחר
-                    const articleId = item.getAttribute('data-article-id');
-                    openModal(articleId);
+                // מאזינים לאירועי לחיצה על כרטיסי המאמרים
+                document.querySelectorAll('.main-news[data-article-id], .side-news-item[data-article-id]').forEach(item => {
+                    item.addEventListener('click', (event) => {
+                        event.preventDefault(); // מונע ניווט לדף אחר
+                        const articleId = item.getAttribute('data-article-id');
+                        openModal(articleId);
+                    });
                 });
-            });
 
-            // מאזין לאירוע לחיצה על כפתור הסגירה
-            closeButton.addEventListener('click', closeModal);
+                // מאזין לאירוע לחיצה על כפתור הסגירה
+                closeButton.addEventListener('click', closeModal);
 
-            // מאזין לאירוע לחיצה מחוץ למודאל כדי לסגור אותו
-            window.addEventListener('click', (event) => {
-                if (event.target == articleModal) {
-                    closeModal();
-                }
-            });
+                // מאזין לאירוע לחיצה מחוץ למודאל כדי לסגור אותו
+                window.addEventListener('click', (event) => {
+                    if (event.target == articleModal) {
+                        closeModal();
+                    }
+                });
 
-            // הפעלת הפונקציות כאשר הדף נטען
-            document.addEventListener('DOMContentLoaded', () => {
-                createParticles();
-                setupMagicCursor();
-                setupAnimation();
-            });
-        </script>
+                // הפעלת הפונקציות כאשר הדף נטען
+                document.addEventListener('DOMContentLoaded', () => {
+                    createParticles();
+                    setupMagicCursor();
+                    setupAnimation();
+                });
+
+            </script>
 </body>
 
 </html>
