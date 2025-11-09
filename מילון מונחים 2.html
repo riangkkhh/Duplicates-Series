@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מילון מונחים - סדרת דופליקטים כרך ב'</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+        :root {
+            --main-color: #4a0072;
+            --glow-color: #9d00ff;
+            --text-color: white;
+            --accent-color: #00e5e5;
+        }
+
+        body {
+            font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('images/צילום מסך 2025-04-17 131825.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(157, 0, 255, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 10%, rgba(157, 0, 255, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background-color: var(--main-color);
+            box-shadow: 0 0 15px var(--glow-color);
+            border: 1px solid var(--glow-color);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(157, 0, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .category-nav button {
+            background-color: var(--main-color);
+            color: white;
+            border: 1px solid var(--glow-color);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            box-shadow: 0 0 5px rgba(157, 0, 255, 0.3);
+            margin: 0.25rem;
+        }
+
+        .category-nav button:hover {
+            background-color: var(--glow-color);
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.8);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 25px;
+            border: 2px solid var(--glow-color);
+            background-color: rgba(74, 0, 114, 0.8);
+            color: white;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.8);
+            background-color: rgba(74, 0, 114, 0.9);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terms-category {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(74, 0, 114, 0.7);
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.2);
+        }
+
+        .terms-category h2 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 0 4px rgba(0, 229, 229, 0.5);
+        }
+
+        .terms-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+
+        .term-box {
+            width: 280px;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .term-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .term-box:hover .term-inner {
+            transform: rotateY(180deg);
+        }
+
+        .term-front,
+        .term-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .term-front {
+            background-color: var(--main-color);
+            color: white;
+            box-shadow: 0 0 10px var(--glow-color);
+            border: 1px solid var(--glow-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .term-back {
+            background-color: rgba(74, 0, 114, 0.9);
+            color: white;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 10px var(--glow-color);
+            border: 1px solid var(--glow-color);
+            font-size: 0.95rem;
+            overflow-y: auto;
+        }
+
+        .term-front::before,
+        .term-back::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(157, 0, 255, 0.3), transparent);
+            z-index: -1;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .term-box:hover .term-front::before,
+        .term-box:hover .term-back::before {
+            opacity: 1;
+        }
+
+        .concept-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(74, 0, 114, 0.8);
+            color: white;
+            font-size: 1rem;
+            text-align: right;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .concept-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background-color: var(--main-color);
+            color: white;
+            border: 1px solid var(--glow-color);
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .control-btn:hover {
+            background-color: var(--glow-color);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.8);
+        }
+
+        footer {
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+            background-color: var(--main-color);
+            box-shadow: 0 0 15px var(--glow-color);
+            border: 1px solid var(--glow-color);
+            clip-path: polygon(0% 30%, 50% 0%, 100% 30%, 100% 100%, 0% 100%);
+            padding-top: 5rem;
+        }
+
+        footer a {
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(0, 229, 229, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .category-nav button {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+            }
+
+            .terms-grid {
+                gap: 1rem;
+            }
+
+            .term-box {
+                width: 230px;
+                height: 130px;
+            }
+
+            .term-front {
+                font-size: 1.1rem;
+            }
+
+            .term-back {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <a href="home.html">
+            <h1>מילון מונחים - סדרת דופליקטים כרך ב׳</h1>
+        </a>
+    </div>
+
+    <div class="category-nav">
+        <button data-category="all">הצג הכל</button>
+        <button data-category="דמויות מפתח">דמויות מפתח</button>
+        <button data-category="דמויות שוליות">דמויות שוליות</button>
+        <button data-category="בעלי חיים">בעלי חיים</button>
+        <button data-category="מקומות">מקומות</button>
+        <button data-category="עולם הדופליקטים - דמויות">עולם הדופליקטים - דמויות</button>
+        <button data-category="עולם הדופליקטים - מקומות">עולם הדופליקטים - מקומות</button>
+        <button data-category="עולם הדופליקטים - מושגים">עולם הדופליקטים - מושגים</button>
+        <button data-category="עולם הדופליקטים - חפצים">עולם הדופליקטים - חפצים</button>
+        <button data-category="עולם הדופליקטים - חוקים">עולם הדופליקטים - חוקים</button>
+        <button data-category="עבר - דמויות">עבר - דמויות</button>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-box" class="search-box" placeholder="חפש מונח...">
+    </div>
+
+    <div class="container" id="terms-container">
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" data-category="all">הצג הכל</button>
+    </div>
+
+    <footer>
+        © 2025 מילון מונחים לסדרת דופליקטים - כל הזכויות שמורות
+    </footer>
+
+    <script>
+        const termsData = {
+            "דמויות מפתח": [
+                {
+                    name: "יוסי",
+                    definition: "סיים"
+                },
+                {
+                    name: "רפי",
+                    definition: "פיוצ'ר"
+                },
+                {
+                    name: "חזקי",
+                    definition: "פרדייס"
+                },
+                {
+                    name: "אהרן",
+                    definition: "אוטוקרט"
+                },
+                {
+                    name: "יחיאל",
+                    definition: "אינדיבידואל"
+                },
+                {
+                    name: "אליאו",
+                    definition: "הקבוצה הגובלת בשטחם של דני וקבוצתו, ובהמשך הופכת לקבוצת האיכרים של קבוצת דני (החיילים)"
+                },
+                {
+                    name: "צ'ו",
+                    definition: "הקבוצה הגובלת בשטחם של דני וקבוצתו, ובהמשך הופכת לקבוצת האיכרים של קבוצת דני (החיילים)"
+                },
+                {
+                    name: "ג'ף",
+                    definition: "הקבוצה הגובלת בשטחם של דני וקבוצתו, ובהמשך הופכת לקבוצת האיכרים של קבוצת דני (החיילים)"
+                },
+                {
+                    name: "מישל",
+                    definition: "הקבוצה הגובלת בשטחם של דני וקבוצתו, ובהמשך הופכת לקבוצת האיכרים של קבוצת דני (החיילים)"
+                },
+                {
+                    name: "רולי",
+                    definition: "הקבוצה הגובלת בשטחם של דני וקבוצתו, ובהמשך הופכת לקבוצת האיכרים של קבוצת דני (החיילים)"
+                },
+                {
+                    name: "דיואו רואל",
+                    definition: "פיוצרי אנטישמי ומתנשא, מהקבוצה הזוכה בסיים. מצוות לדני למשימת מפקדי החיילים"
+                },
+                {
+                    name: "הדוכס ניקולאי מרשל",
+                    definition: "דודו של המלך המכהן, רביעי בסדר הירושה לכתר"
+                },
+                {
+                    name: "אבישי קימל",
+                    definition: "אחיו התאום של ישי קימל, בעל יד תותבת"
+                },
+                {
+                    name: "ג'יימס קימל",
+                    definition: "דופליקט בכיר, אביו של ישי ואבישי. שומר היער באוטוקרט, תפקיד מסווה לשמירה על רופיו. כדופליקט - צאצא למאלפי זאבי הקרצ'ר"
+                },
+                {
+                    name: "קאזנס",
+                    definition: "הבייס של מהדי, אוצר המים לשעבר. משותק בכל גופו וזרוק בבית אבות ממשלתי"
+                },
+                {
+                    name: "רוב",
+                    definition: "בעל חווה עיוור וטוב לב, שומר על רופיו ועל הקולר עד לאולטימטום של שכניו"
+                },
+                {
+                    name: "עוזיאל",
+                    definition: "ראש קבוצה ואגאבונדי בן 18-19, הציל את רופיו ואת דני"
+                },
+                {
+                    name: "הדמות המסתורית",
+                    definition: "דמות דופליקטית המדריכה את דני ומקדמת אותו למטרות שלו. דני מכיר אותו אך הדמות השכיחה ממנו מיהי. פעמיים השאירה לו פתק בכתב ידה"
+                }
+            ],
+            "דמויות שוליות": [
+                {
+                    name: "דוד, יהודה",
+                    definition: "חברי ילדות של דני, עולים לישיבה בארץ ישראל"
+                },
+                {
+                    name: "הרב שטילמן",
+                    definition: "הרב הקשיש של משפחת הארט"
+                },
+                {
+                    name: "ד\"ר שניט",
+                    definition: "הרופא של קותי, המטפל בו לאחר התאמת התותבת"
+                },
+                {
+                    name: "ג'ון",
+                    definition: "מצוות גלובל, מדריך את דני לפני יציאתו למשימה עם דיואו"
+                },
+                {
+                    name: "פרופסור טאי",
+                    definition: "גלובל, אחראי על המערכות הממוחשבות"
+                },
+                {
+                    name: "פרופסור ברנר",
+                    definition: "גלובל, האחראי האדמיניסטרטיבי"
+                },
+                {
+                    name: "פרופסור בונסון",
+                    definition: "גלובל, האחראי על תחום הכושר הגופני"
+                },
+                {
+                    name: "רוג'ר וכריס",
+                    definition: "אנשי היער הפוגשים ברופיו, מנסים לחקור אותו אך הוא נעלם להם לחלוטין"
+                },
+                {
+                    name: "אוטוקרטי בן שלשים",
+                    definition: "סייע לדיואו בתיקון מערכת ההשקייה"
+                },
+                {
+                    name: "קוריגו",
+                    definition: "צעיר אוטוקרטי, לקח את דני לטיול בכפר"
+                },
+                {
+                    name: "טום, טדי",
+                    definition: "שכניו של רוב, רצו להרוג את רופיו"
+                },
+                {
+                    name: "ר' מת'ס",
+                    definition: "מזקני שבט הואגאבונדים, הורה על שחרור מקסימיליאן ורופיו"
+                },
+                {
+                    name: "אדם",
+                    definition: "מפקד תחנת המשטרה שעצר את אורון ג'ייבן (סקנדר של אונטריו) לאחר מותו המבוים של קאזנס"
+                }
+            ],
+            "בעלי חיים": [
+                {
+                    name: "רופיו",
+                    definition: "מנהיג זאבי הקרצ'ר, בעל פרווה סגולה. מועבר ע\"י מקסימיליאן מבועת האוצרים אל כדור הארץ. הורג בנשיכה בודדת, שיניו מורעלות"
+                },
+                {
+                    name: "קינג",
+                    definition: "הדואוסיינס של דני"
+                },
+                {
+                    name: "איליי",
+                    definition: "הדואוסיינס של קותי אדלר"
+                },
+                {
+                    name: "בונה, ארנבת, זאב, ירגזים",
+                    definition: "חיות שד\"ר קאלי הקפיא ושם בחדרו"
+                },
+                {
+                    name: "וופי",
+                    definition: "כלבו הנאמן של רוב"
+                },
+                {
+                    name: "אורורו",
+                    definition: "סוס הפוני של לאי"
+                },
+                {
+                    name: "נני",
+                    definition: "כלב הצ'יוואווה הקטן של זירו"
+                },
+                {
+                    name: "גריי",
+                    definition: "הסוס של עוזיאל"
+                }
+            ],
+            "מקומות": [
+                {
+                    name: "אוטוקרט",
+                    definition: "אוסטרליה לשעבר, מלך אינו תואר, אלא מהות"
+                },
+                {
+                    name: "האגליס",
+                    definition: "כפר קטן באוטקרט מוגן בחומה, דני ודיואו נשלחו לשם לביצוע משימתם"
+                },
+                {
+                    name: "נחל ליד הכפר",
+                    definition: "מקום פגיעת הריקורדום"
+                },
+                {
+                    name: "מערה ליד הנחל",
+                    definition: "מקום לינתם של דני ודיואו"
+                },
+                {
+                    name: "טונדרות ענקיות",
+                    definition: "הג'ונגל של אוטוקרט"
+                },
+                {
+                    name: "מחנה גלובל",
+                    definition: "השוק במחנה גלובל, המחנה הצבאי"
+                },
+                {
+                    name: "האחוזה של זירו",
+                    definition: "טירה מפוארת בראש צוק גבוה, בין הרים מושלגים"
+                }
+            ],
+            "עולם הדופליקטים - דמויות": [
+                {
+                    name: "ריינג'",
+                    definition: "אוצר הזהות"
+                },
+                {
+                    name: "היסטרא",
+                    definition: "אוצר החיות"
+                },
+                {
+                    name: "סטולי",
+                    definition: "אוצר המים"
+                },
+                {
+                    name: "טיהאל",
+                    definition: "אוצר המחשבות"
+                },
+                {
+                    name: "מהדי",
+                    definition: "אוצר המים לשעבר, נכלא בקרצ'ר (במקום עונש מוות) בגלל הפרת היורהמנטום, שוחרר ע\"י זירו"
+                },
+                {
+                    name: "הורא",
+                    definition: "סוהר בקרצ'ר"
+                },
+                {
+                    name: "רוק",
+                    definition: "אסיר בקרצ'ר, סוהר לשעבר, נענש על כך ששיתף פעולה עם מהדי"
+                },
+                {
+                    name: "טהולאר",
+                    definition: "בנו של המאסטר המת ושופט בזכות עצמו"
+                },
+                {
+                    name: "קרוק",
+                    definition: "שופט דופליקטי"
+                },
+                {
+                    name: "ה'פאוטור'",
+                    definition: "ישות שחורה ומעוותת הכלואה במעמקי הקרצ'ר, בתא בו הפקיד דני את ספר הריקורדום. שואב אנרגיה מהעבר וחי בהווה"
+                }
+            ],
+            "עולם הדופליקטים - מקומות": [
+                {
+                    name: "הכספת",
+                    definition: "ממוקמת במרתף בניין המועצה העליונה, בתוכה שמורים כדורי כוחות העל בתאים נפרדים"
+                }
+            ],
+            "עולם הדופליקטים - מושגים": [
+                {
+                    name: "ריקורדום",
+                    definition: "כוח שמביא את האנרגייה הדופליקטית לשיאה, מיועד רק למקרי חירום. יוצר בכדור הארץ מופע חריג. יכול לפתוח 3 תאי כספת של כדורי כוחות-העל"
+                },
+                {
+                    name: "אוצר ליברטאס",
+                    definition: "אוצר שהשתמש בריקורדום לצורך חיובי, ובחר להקריב את חייו לתועלת האנושות"
+                },
+                {
+                    name: "אוצר קאפטוס",
+                    definition: "אוצר שהשתמש בריקורדום לצורך עצמו, ונכלא בקרצ'ר או מת בתוך שנה"
+                },
+                {
+                    name: "אוצר קייבלס",
+                    definition: "אוצר שהשתמש בריקורדום לצורך עצמו, הסתיר את מעשהו, ובמקום להיענש או למות - בחר לשאוב אנרגיה מאדם אחר (שימות במקומו, והוא יחיה גם לאחר מות הפאוטור)"
+                },
+                {
+                    name: "אינויזיביליס",
+                    definition: "כח על של הפיכת סקנדר לרואה ואינו נראה בתוך בועת האוצרים. היה בעבר והתבטל לכאורה, נמצא בשימושו של בנדו"
+                },
+                {
+                    name: "כבלי הפרליזיס",
+                    definition: "אחד העונשים החמורים בעולם הדופליקטים - הסקנדר כלוא בקרצ'ר, והבייס משותק מהצוואר ומטה"
+                },
+                {
+                    name: "פאוטור",
+                    definition: "הדופליקט ממנו נשאבת האנרגיה עבור אוצר הקייבלס. כאשר הוא מת - סרה השפעת הריקורדום מאוצר הקייבלס ואף אחד לא יכול לדעת עליו. גם בעל חיים דופליקטי יכול לשמש כפאוטור"
+                }
+            ],
+            "עולם הדופליקטים - חפצים": [
+                {
+                    name: "הקולר של רופיו",
+                    definition: "קולר סגול שמקסימיליאן שם לרופיו, נעלם מביתו של רוב באופן מוזר"
+                },
+                {
+                    name: "חרב המורטם",
+                    definition: "חרב דופליקטית, הדבר היחיד שיכול להזיק בבועת האוצרים (מלבד הזאבים), פגיעתה גם בכדור הארץ קשה פי עשר מחרב רגילה"
+                },
+                {
+                    name: "ספר הריקורדום",
+                    definition: "הספר המרכז את כל המידע על כח הריקורדום, הכתוב בו נחשף רק למי שראוי לכך. פרק 1: כוחו של הריקורדום. פרק 2: איך להשתמש בו בלי להינזק. פרק 3: אופן השימוש הרגיל. פרק 4: אוצרי קייבלס. פרק 5: אוצרי קאפטוס. פרק 6: אוצרי ליברטאס. פרק 7: כך תחשוף את המשתמש האחרון בריקורדום"
+                }
+            ],
+            "עולם הדופליקטים - חוקים": [
+                {
+                    name: "סקנדר ובייס",
+                    definition: "כל יצירת סקנדר מעוררת אנרגיה בעולם. לדופליקטים יש אפשרות לזהות אנרגיה של סקנדרים, אבל לא של בייס. נקסום אינו מעורר אנרגיה דופליקטית. במקרה שכח העל של סקנדר נשלף ממנו ומושמד - הסקנדר יתמוסס והבייס ייפגע. הבייס של אוצר קייבלס לא נפגע כאשר מתמוסס לו סקנדר."
+                },
+                {
+                    name: "אוצרים וכוחות על",
+                    definition: "כח העל של קריאת המחשבות הוא דו-כיווני, דופליקט בעל הכח הזה יכול לנעול את מחשבותיו. איבוד כדור כח העל של דופליקט, ממוסס את הסקנדר השייך לו (ופוגע בגוף הבייס). לאוצר קייבלס יש אפשרות להתנתק מהפאוטור, וכאשר הוא יתנתק - ימות בתוך פרק זמן של בין חודש לשנתיים. אוצר קייבלס שנחשף, יעדיף בדרך כלל לנתק את הקשר עם הפאוטור מאשר להיכלא לעשרות שנים בקרצ'ר. אוצרי קייבלס שנהיו כאלו ללא ידיעתם, הסקנדר שלהם עלול להרדים את הבייס ולצאת למשימה סודית כאוצר קייבלס."
+                },
+                {
+                    name: "דופליקטיות",
+                    definition: "המאסטר יכול להכתיר דופליקט גם שלא בכח התורשה, אך זהו מעשה נדיר מאוד. אם דופליקט הורג דופליקט אחר הוא יורש את כוחו. מקבלים כוח על רק על משימות קשות במיוחד, מסכנות חיים. הכח בתליון ההקסגונום תלוי ברצונו של העונד אותו. הוא יכול לבטל את כח הדופליקטיות כליל, או להשתמש בה באופן חלקי או מלא. גם בעלי חיים הופכים לדופליקטים לאחר נגיעה בכדור הטונגו, אך נראה שרק בעלי חיים גדולים ישרדו את עוצמת המהפך. המאסטר (או רק ד\"ר קאלי) יכולים לראות את אנשי העתיד בביקורם בעבר. כח העל של קריאת מחשבות ניתן רק מדרגת אדולטוס. חרב המורטם ניתנת רק מדרגת פריטוס. אנרגיית ההגנה של אנגלר חזקה אפילו יותר מתליון ההקסגונום. דופליקטיות מוקדמת היא כאשר הכח הדופליקטי מתעורר אצל צעיר/ה מתחת גיל 15. בדרך כלל עוצמת הדופליקטיות גבוהה מידי עבור הגוף הצעיר, והוא מת. דופליקטיות מוקדמת משמעותה שאוצר קיילבס הופך את הצעיר/ה לדופליקט על מנת לשאוב ממנו אנרגיה כדי לחיות, אחרת ימות. ניתן לעצור דופליקטיות מוקדמת, ע\"י ניתוק של אוצר הקייבלס מהפאוטור (הצעיר שמשמש כספק האנרגיה של האוצר). דופליקט שנענש בכבלי הפרליזיס ונוגע בכדור הטונגו - יוצר לעצמו סקנדר חדש. דופליקט שנענש בכלא הקרצ'ר וכוחותיו נשללו ממנו, ויש לו סקנדר חדש - הסקנדר החדש יוכל לקבל חזרה את כוחותיו המקוריים של הדופליקט, והבייס ישתחרר מכבלי הפרליזיס - אך רק לאחר שהסקנדר הכלוא בקרצ'ר ימות. למגוייסים לקוסטדוס סילנטי יש קעקוע על היד."
+                },
+                {
+                    name: "בועת האוצרים",
+                    definition: "כל אסיר שנכנס לקרצ'ר דמו מקודד אצל המנהיג של להקת זאבי הקרצ'ר. טקס השחרור של אסיר מהקרצ'ר, כולל את הסרת קוד התקיפה מן הזאבים. דופליקט הכלוא בקרצ'ר מאבד את כל יכולותיו הדופליקטיות, כולל נקסום. אסיר שמנסה לברוח מהקרצ'ר - הזאב יניס אותו חזרה לתאו, ושרשרת תכבול אותו לקיר. הקארצ'ר הוא מקור אנרגיה אדיר שיכול גם לשמר חיים של אוצר קייבלס לאחר ניתוק פאוטור. הבועה הדופליקטית שיצר ד\"ר קאלי בלתי חדירה, מלבד אלו הנושאים עימם את תליון ההקסגונום (או את הכח נוגד-הדופליקטיות, כמו יורי). במגרשי האשליות ניתן לצפות באשליות מן העבר, לדוגמא משפטים שנערכו לדופליקטים, או מאורעות חשובים בהיסטוריה הדופליקטית. בניין המועצה משתחזר מעצמו ולא ניתן להריסה. בניין המועצה נפתח רק לאוצרים או למי שקיבל זימון מדופליקט מורשה. ישנה מנהרה תת-קרקעית סודית המחברת את הקרצ'ר למרתף בניין המועצה. אוצר שמביא את כח העל שלו לשיא יכול למוטט את בניין המועצה העליונה."
+                },
+                {
+                    name: "ריקורדום",
+                    definition: "ריקורדום הוא כח שניתן בידי האוצרים, אך גם דופליקטים יכולים להתמש בו במקרים מסויימים מאוד. הריקורדום מביא את כח העל לשיא, אך מפרק את המשתמש בו. הדופליקט שביצע את הריקורדום לא יכול להתקיים יותר מהאנרגיות שהגוף שלו מפיק, והוא ימות בתוך שנה. השימוש בריקורדום הוא כשיש לאוצר צורך נואש להגן או להשמיד משהו בעוצמה שאין שניה לה. אנרגיית הריקורדום פוגעת בכדור הארץ באזור בו נמצא האדם שהיא כוונה כלפיו. ניתן לדעת מיהו האוצר שהשתמש בריקורדום, לפי סוג הפגיעה בכדור הארץ."
+                }
+            ],
+            "עבר - דמויות": [
+                {
+                    name: "אבנר",
+                    definition: "יהודי, יתום בוגר - דופליקט, בידיו הופקד ספר הריקורדום"
+                },
+                {
+                    name: "יוזף, מארק",
+                    definition: "יתומים דופליקטיים בכירים, שיחד עם אבנר מהווים כח ההמשך של ד\"ר קאלי ומקבלים כוחות שיאזנו אחד את השני"
+                },
+                {
+                    name: "סאשה, בוריס, רונדי, אולג, פיוטר",
+                    definition: "יתומים דופליקטיים מבית היתומים של ד\"ר קאלי"
+                },
+                {
+                    name: "יורי",
+                    definition: "יתום שמסרב להיות דופליקט, בגופו נחקק הכוח הנוגד של הדופליקטיות"
+                },
+                {
+                    name: "פאול, יורקה וג'ורג",
+                    definition: "הורחקו מבית היתומים של ד\"ר קאלי בעקבות מחשבות רוע שזוהו בהם"
+                }
+            ]
+        };
+
+        function createTermElement(term) {
+            const termBox = document.createElement('div');
+            termBox.className = 'term-box';
+            termBox.innerHTML = `
+      <div class="term-inner">
+          <div class="term-front">${term.name}</div>
+          <div class="term-back">${term.definition}</div>
+        </div>`;
+            return termBox;
+        }
+
+        function createConceptElement(concept) {
+            const conceptDiv = document.createElement('div');
+            conceptDiv.className = 'concept-item';
+            conceptDiv.innerHTML = `<div class="concept-name">${concept.name}</div><div>${concept.definition}</div>`;
+            return conceptDiv;
+        }
+
+        function renderTerms(termsByCategory = termsData) {
+            const container = document.getElementById('terms-container');
+            container.innerHTML = '';
+
+            for (const category in termsByCategory) {
+                if (termsByCategory.hasOwnProperty(category)) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'terms-category';
+
+                    const categoryTitle = document.createElement('h2');
+                    categoryTitle.textContent = category;
+                    categoryDiv.appendChild(categoryTitle);
+
+                    const termsGrid = document.createElement('div');
+                    termsGrid.className = 'terms-grid';
+                    categoryDiv.appendChild(termsGrid);
+
+                    termsByCategory[category].forEach(term => {
+                        if (term.definition && term.definition.length > 0) {
+                            termsGrid.appendChild(createTermElement(term));
+                        }
+                    });
+
+                    container.appendChild(categoryDiv);
+                }
+            }
+
+            setupItemsAnimation();
+        }
+
+        function createParticles() {
+            const container = document.body;
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+                    const size = Math.random() * 8 + 2;
+                    const hue = 270 + Math.random() * 30;
+                    const opacity = Math.random() * 0.5 + 0.1;
+
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                    const duration = Math.random() * 10 + 5;
+                    const delay = Math.random() * 5;
+
+                    particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                    container.appendChild(particle);
+                }, i * 200);
+            }
+        }
+
+        function filterTerms(searchTerm) {
+            const filteredTerms = {};
+            searchTerm = searchTerm.toLowerCase();
+
+            for (const category in termsData) {
+                if (termsData.hasOwnProperty(category)) {
+                    const filteredCategoryTerms = termsData[category].filter(term =>
+                        term.name.toLowerCase().includes(searchTerm) ||
+                        (term.definition && term.definition.toLowerCase().includes(searchTerm))
+                    );
+
+                    if (filteredCategoryTerms.length > 0) {
+                        filteredTerms[category] = filteredCategoryTerms;
+                    }
+                }
+            }
+            return filteredTerms;
+        }
+
+        function setupItemsAnimation() {
+            const termBoxes = document.querySelectorAll('.term-box');
+            termBoxes.forEach((box, index) => {
+                box.style.opacity = 0;
+                box.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    box.style.transition = 'all 0.5s ease-in-out';
+                    box.style.opacity = 1;
+                    box.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        window.onload = () => {
+            renderTerms();
+            createParticles();
+
+            document.getElementById('search-box').addEventListener('input', (e) => {
+                const searchTerm = e.target.value;
+                const filteredTerms = filterTerms(searchTerm);
+                renderTerms(filteredTerms);
+            });
+
+            document.querySelectorAll('.category-nav button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const category = this.dataset.category;
+                    if (category === 'all') {
+                        renderTerms();
+                    } else {
+                        const filteredTerms = {};
+                        if (termsData[category]) {
+                            filteredTerms[category] = termsData[category];
+                        }
+                        renderTerms(filteredTerms);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.control-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const category = this.dataset.category;
+                    if (category === 'all') {
+                        renderTerms();
+                    } else {
+                        const filteredTerms = {};
+                        if (termsData[category]) {
+                            filteredTerms[category] = termsData[category];
+                        }
+                        renderTerms(filteredTerms);
+                    }
+                });
+            });
+        };
+    </script>
+</body>
+
+</html>
