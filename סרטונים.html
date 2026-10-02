@@ -1,11 +1,780 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="he">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>סרטונים.</title>
+    <title>גלריית סרטונים - סדרת דופליקטים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+        :root {
+            --main-color: #008080;
+            --text-color: #f6f9f9;
+            --purple: #4a0072;
+            --purple-glow: #9d00ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('images/צילום\ מסך\ 2025-04-17\ 131825.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 128, 128, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 10%, rgba(0, 128, 128, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background-color: var(--purple);
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 128, 128, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.3);
+            z-index: 2;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-item {
+            background-color: var(--purple);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 15px var(--purple-glow);
+            border: 1px solid var(--purple-glow);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(157, 0, 255, 0.4);
+        }
+
+        .gallery-item::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(0, 128, 128, 0.3), transparent);
+            z-index: -1;
+            border-radius: 17px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .gallery-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-video {
+            transform: scale(1.05);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            transition: background 0.3s ease;
+        }
+
+        .gallery-item:hover .play-overlay {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(157, 0, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .play-icon {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(157, 0, 255, 0.7);
+        }
+
+        .gallery-info {
+            padding: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .gallery-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content-wrapper {
+            position: relative;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            max-width: 1000px;
+            height: 100%;
+            padding: 60px 20px 100px;
+        }
+
+        .modal-video {
+            width: 100%;
+            max-height: 70vh;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            left: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .close:hover {
+            color: var(--purple-glow);
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(74, 0, 114, 0.8);
+            color: white;
+            border: 2px solid var(--purple-glow);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .nav-btn:hover {
+            background: var(--purple-glow);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px var(--purple-glow);
+        }
+
+        .prev-btn {
+            right: 20px;
+        }
+
+        .next-btn {
+            left: 20px;
+        }
+
+        .download-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, var(--purple-glow), var(--main-color));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.3);
+            font-family: inherit;
+            font-size: 16px;
+            z-index: 1001;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(157, 0, 255, 0.5);
+        }
+
+        .modal-info {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            z-index: 1001;
+            max-width: 80%;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--purple-glow);
+        }
+
+        .modal-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .video-counter {
+            position: absolute;
+            top: 20px;
+            right: 50%;
+            transform: translateX(50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            z-index: 1001;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .back-button {
+                position: static;
+                transform: none;
+                margin-top: 1rem;
+                display: inline-block;
+            }
+
+            .header {
+                text-align: center;
+                padding-bottom: 3rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .modal-content-wrapper {
+                width: 95%;
+                padding: 80px 10px 120px;
+            }
+
+            .modal-video {
+                max-height: 50vh;
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+
+            .prev-btn {
+                right: 10px;
+            }
+
+            .next-btn {
+                left: 10px;
+            }
+
+            .close {
+                left: 15px;
+                top: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 30px;
+            }
+
+            .modal-info {
+                bottom: 100px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                max-width: none;
+            }
+        }
+
+        .magic-cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 128, 128, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            backdrop-filter: blur(2px);
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
-    <h1 style="color: red;">בקרוב!</h1>
+    <div class="magic-cursor"></div>
+
+    <div class="header">
+        <h1>🎬 גלריית סרטונים</h1>
+        <a href="index.html" class="back-button">← חזרה</a>
+    </div>
+
+    <div class="container">
+        <div class="gallery-grid" id="gallery"></div>
+    </div>
+
+    <div id="videoModal" class="modal">
+        <span class="close">&times;</span>
+        <div class="video-counter">
+            <span id="currentVideoNumber">1</span> / <span id="totalVideos">0</span>
+        </div>
+        <div class="modal-content-wrapper">
+            <video class="modal-video" id="modalVideo" controls controlsList="nodownload">
+                הדפדפן שלך אינו תומך בתגית וידאו.
+            </video>
+        </div>
+        <div class="modal-info">
+            <div class="modal-title" id="modalTitle">כותרת הסרטון</div>
+            <div class="modal-desc" id="modalDesc">תיאור הסרטון</div>
+        </div>
+        <button class="nav-btn prev-btn" id="prevBtn">←</button>
+        <button class="nav-btn next-btn" id="nextBtn">→</button>
+        <a href="#" class="download-btn" id="downloadBtn" download>
+            📥 הורד סרטון
+        </a>
+    </div>
+
+    <script>
+        // מערך הסרטונים - החלף בנתיבי הסרטונים שלך
+        const videos = [
+            {
+                src: 'videos/דופליקט.mp4',
+                title: 'סרטון 1',
+                desc: 'דופליקט מזמן סקנדר'
+            },
+            {
+                src: 'videos/סרטון2-קייזר במשרד.mp4',
+                title: 'סרטון 2',
+                desc: 'קייזר במשרדו מזמן את הסקנדרים.'
+            },
+            {
+                src: 'videos/דני נגד הארי.mp4',
+                title: 'סרטון 3',
+                desc: 'סרטון קומי של דופליקט נלחם בהארי פוטר,  מבטא את ויכוח הקוראים בנוגע לההשואה'
+            },
+            {
+                src: 'videos/דר קאלי ביער.mp4',
+                title: 'סרטון 3',
+                desc: 'ד"ר קאלי מגלה את כדור הטונגו לראשונה. (מתנצלים על זה שזה לא ממש דומה לסצנה) '
+            },
+            // הוסף עוד סרטונים כאן
+        ];
+
+        let currentVideoIndex = 0;
+
+        function createGallery() {
+            const gallery = document.getElementById('gallery');
+            const totalVideosSpan = document.getElementById('totalVideos');
+
+            totalVideosSpan.textContent = videos.length;
+
+            videos.forEach((video, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.onclick = () => openModal(index);
+
+                item.innerHTML = `
+                    <div class="video-wrapper">
+                        <video class="gallery-video" muted loop playsinline>
+                            <source src="${video.src}" type="video/mp4">
+                        </video>
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-title">${video.title}</div>
+                        <div class="gallery-desc">${video.desc}</div>
+                    </div>
+                `;
+
+                gallery.appendChild(item);
+
+                // הפעל סרטון קטן בריחוף
+                const videoElement = item.querySelector('.gallery-video');
+                item.addEventListener('mouseenter', () => {
+                    videoElement.play().catch(() => {});
+                });
+                item.addEventListener('mouseleave', () => {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                });
+            });
+        }
+
+        function openModal(index) {
+            currentVideoIndex = index;
+            updateModal();
+            document.getElementById('videoModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // הפעל את הסרטון במודל
+            const modalVideo = document.getElementById('modalVideo');
+            modalVideo.play().catch(() => {});
+        }
+
+        function updateModal() {
+            const modalVideo = document.getElementById('modalVideo');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDesc');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const currentVideoNumber = document.getElementById('currentVideoNumber');
+
+            const currentVideo = videos[currentVideoIndex];
+
+            modalVideo.src = currentVideo.src;
+            modalTitle.textContent = currentVideo.title;
+            modalDesc.textContent = currentVideo.desc;
+            downloadBtn.href = currentVideo.src;
+            downloadBtn.download = currentVideo.title + '.mp4';
+            currentVideoNumber.textContent = currentVideoIndex + 1;
+
+            // עצור את הסרטון הקודם והפעל את החדש
+            modalVideo.load();
+        }
+
+        function closeModal() {
+            const modalVideo = document.getElementById('modalVideo');
+            modalVideo.pause();
+            modalVideo.currentTime = 0;
+            document.getElementById('videoModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextVideo() {
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+            updateModal();
+        }
+
+        function prevVideo() {
+            currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+            updateModal();
+        }
+
+        function createParticles() {
+            const container = document.body;
+
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+                    const size = Math.random() * 6 + 2;
+                    const hue = 175 + Math.random() * 10;
+                    const opacity = Math.random() * 0.4 + 0.1;
+
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = `hsla(${hue}, 70%, 70%, ${opacity})`;
+
+                    const duration = Math.random() * 10 + 5;
+                    const delay = Math.random() * 5;
+                    particle.style.animation = `float ${duration}s ease-in infinite ${delay}s`;
+
+                    container.appendChild(particle);
+                }, i * 200);
+            }
+        }
+
+        function setupMagicCursor() {
+            const cursor = document.querySelector('.magic-cursor');
+
+            if (window.matchMedia('(pointer: fine)').matches) {
+                cursor.style.display = 'block';
+
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+
+                document.querySelectorAll('.gallery-item, .back-button, .nav-btn, .download-btn, .close').forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        cursor.style.width = '50px';
+                        cursor.style.height = '50px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.8)';
+                    });
+
+                    item.addEventListener('mouseleave', () => {
+                        cursor.style.width = '30px';
+                        cursor.style.height = '30px';
+                        cursor.style.borderColor = 'rgba(0, 128, 128, 0.5)';
+                    });
+                });
+            }
+        }
+
+        function setupKeyboardEvents() {
+            document.addEventListener('keydown', (e) => {
+                const modal = document.getElementById('videoModal');
+                if (modal.style.display === 'block') {
+                    switch (e.key) {
+                        case 'Escape':
+                            closeModal();
+                            break;
+                        case 'ArrowLeft':
+                            nextVideo();
+                            break;
+                        case 'ArrowRight':
+                            prevVideo();
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            const video = document.getElementById('modalVideo');
+                            if (video.paused) {
+                                video.play();
+                            } else {
+                                video.pause();
+                            }
+                            break;
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createGallery();
+            createParticles();
+            setupMagicCursor();
+            setupKeyboardEvents();
+
+            document.querySelector('.close').onclick = closeModal;
+            document.getElementById('nextBtn').onclick = nextVideo;
+            document.getElementById('prevBtn').onclick = prevVideo;
+
+            document.getElementById('videoModal').onclick = (e) => {
+                if (e.target === e.currentTarget) {
+                    closeModal();
+                }
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            setTimeout(() => {
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(30px)';
+                    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(item);
+                });
+            }, 100);
+        });
+    </script>
 </body>
+
 </html>

@@ -10,7 +10,8 @@
 
     :root {
       --main-color: #008080;
-      --text-color: #f6f9f9;
+      --text-color: white;
+      --accent-color: red;
     }
 
     body {
@@ -106,40 +107,12 @@
 
     h1 {
       margin: 0;
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 900;
       text-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
         0 0 20px rgba(0, 128, 128, 0.5);
       position: relative;
       z-index: 1;
-    }
-
-    h2 {
-      font-size: 2.5em;
-      margin: 10px 0 0;
-      color: rgb(129, 137, 245);
-      font-weight: 700;
-      position: relative;
-      z-index: 1;
-      text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
-    }
-
-    span {
-      color: #ffffff;
-      font-size: 0.75em;
-    }
-
-    .a {
-      text-decoration: dashed;
-    }
-
-    h3 {
-      margin: 10px 0 0;
-      color: red;
-      font-weight: 700;
-      position: relative;
-      z-index: 1;
-      text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
     }
 
     a {
@@ -160,7 +133,8 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 2.5rem;
+      gap: 2rem;
+      /* שינוי מ-2.5rem ל-2rem כדי להתאים לשורה */
       margin-bottom: 3rem;
       padding: 1rem;
     }
@@ -171,7 +145,8 @@
       border: 1px solid #9d00ff;
       border-radius: 15px;
       overflow: hidden;
-      width: 220px;
+      width: 200px;
+      /* הקטנה מ-220px ל-200px כדי שיתאים 4 בשורה */
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(255, 255, 255, 0.1) inset;
       transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -210,7 +185,7 @@
 
     .item-image {
       width: 100%;
-      height: 210px;
+      height: 220px;
       object-fit: cover;
       display: block;
       transition: transform 0.5s ease;
@@ -222,7 +197,7 @@
     }
 
     .item-name {
-      padding: 1.1rem 1rem;
+      padding: 1.2rem 1rem;
       text-align: center;
       font-weight: bold;
       color: var(--text-color);
@@ -233,6 +208,12 @@
 
     .item-box:hover .item-name {
       transform: translateY(-5px);
+    }
+
+    .a {
+      color: var(--accent-color);
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
     }
 
     /* סמן קסום */
@@ -296,125 +277,55 @@
         height: 160px;
       }
     }
-
-    /* רקע כהה שקוף מאחורי הפרסומת */
-    #ad-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9998;
-    }
-
-    /* רקע כהה מאחורי הפרסומת */
-    #ad-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9998;
-    }
-
-    /* הקופסה של הפרסומת */
-    #ad-popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
-      z-index: 9999;
-      padding: 12px;
-      text-align: right;
-      width: 520px;
-      height: 520px;
-    }
-
-    /* כפתור הסגירה */
-    #close-ad {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      cursor: pointer;
-      font-size: 26px;
-      font-weight: bold;
-      color: #444;
-    }
-
-    /* תמונת הפרסומת */
-    #ad-popup img {
-      width: 500px;
-      height: 500px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
   </style>
 </head>
 
 <body>
-  <!-- שכבת רקע -->
-  <div id="ad-overlay"></div>
-
-  <!-- הפרסומת -->
-  <div id="ad-popup">
-    <span id="close-ad">×</span>
-    <a href="מאמר יונה.html" target="_blank">
-      <img src="images/מאמר יונה.png" alt="פרסומת">
-    </a>
-  </div>
   <!-- אלמנט מצביע קסום -->
   <div class="magic-cursor"></div>
 
   <div class="header">
-    <a href="index.html">
-      <h1>חידונים </h1>
+    <a href="home.html">
+      <h1>חידונים דופליקטים 3: יורשים זמנים אבודים</h1>
     </a>
-    <h3 id="quiz-counter">כמות החידונים באתר כרגע: ...</h3>
   </div>
 
   <div class="container">
-    <div class="items-grid" id="quizzes">
-      <!-- Item 1 -->
-      <a href="Duplicate1.html" class="item-box category-link" data-quiz-count="4">
-        <img src="images/דופליקטים 1 הדמיה.png" alt="דופליקטים 1" class="item-image">
-        <div class="item-name">דופליקטים 1-התגלות</div>
+    <div class="items-grid">
+
+      <!-- <a href="https://docs.google.com/forms/d/e/1FAIpQLScDz0e0oxhVFJ-F2jYJ7B4A9g0qADGoHtZwpf5PKXwfi71ktQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: נשמה בוערת</div>
       </a>
 
-      <!-- Item 2 -->
-      <a href="Duplicate2.html" class="item-box category-link" data-quiz-count="5">
-        <img src="images/דופליקטים 2 הדמיה.png" alt="דופליקטים 2" class="item-image">
-        <div class="item-name">דופליקטים 2-אוצרים: כבלי החירות</div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgicE4eNIzL9-Rk2TIMZx6M6Dv8pkHsTIQpsCNek5Xf5mX6g/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: זיתים</div>
       </a>
 
-      <!-- Item 3 -->
-      <a href="Duplicate3.html" class="item-box category-link" data-quiz-count="0">
-        <img src="images/דופליקטים 3 הדמיה.webp" alt="דופליקטים 3" class="item-image">
-        <div class="item-name">דופליקטים 3- יורשים: זמנים אבודים</div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdfP_t6TBq5nUbhL7tnC5rtLreoW7qVNpGcs9cM3zu7a-m_KQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: בינוני\מאת: מתלמידי הגר"א<br>
+          <span class="a">חלק א׳​</span>
+        </div>
       </a>
 
-      <!-- Item 4 -->
-      <a href="דופליקטים4.html" class="item-box category-link" data-quiz-count="0">
-        <img src="" alt="דופליקטים 4" class="item-image">
-        <div class="item-name">ואף על פי שיתמהמה אם כל זה אחכה לו...</div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcUtgsHviey_xRunVMOKgUg6aXecQxWIzC5IUA6WIymtW-mQ/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: מתלמידי הגר"א<br>
+          <span class="a">חלק ב׳</span>
+        </div>
       </a>
 
-      <!-- Item 5 -->
-      <a href="דופליקטים5.html" class="item-box category-link" data-quiz-count="0">
-        <img src="" alt="דופליקטים 5" class="item-image">
-        <div class="item-name">ואף על פי שיתמהמה אם כל זה אחכה לו...</div>
-      </a>
-
-      <a href="involved.html" class="item-box category-link" data-quiz-count="4">
-        <img src="images/סמל דופליקטים מעורב.png" alt="חידונים מעורבים" class="item-image">
-        <div class="item-name">חידונים כלליים</div>
-      </a>
-
-      <a href="everything.html" class="item-box">
-        <img src="images/סמל דופליקטים מעורב.png" alt="כל החידונים" class="item-image">
-        <div class="item-name">כל החידונים</div>
-      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKStvLxqVg1p9RiT9zpJSUCrJ_lvPr2zO2Wu2LqiOVfowJeA/viewform"
+        class="item-box" target="_blank">
+        <img src="images/סמל דופליקטים אדום.png" alt="דופליקטים 2" class="item-image">
+        <div class="item-name">דרגה: קשה\מאת: זירו</div>
+      </a> -->
     </div>
   </div>
 
@@ -425,49 +336,6 @@
   </a>
 
   <script>
-    const overlay = document.getElementById("ad-overlay");
-    const popup = document.getElementById("ad-popup");
-    const close = document.getElementById("close-ad");
-
-    // פונקציה להצגת הפרסומת
-    function showAd() {
-      overlay.style.display = "block";
-      popup.style.display = "block";
-    }
-
-    // פונקציה לסגירה
-    function closeAd() {
-      overlay.style.display = "none";
-      popup.style.display = "none";
-    }
-
-    // סגירה בלחיצה על איקס או על הרקע
-    close.addEventListener("click", closeAd);
-    overlay.addEventListener("click", closeAd);
-
-    // הצגה ראשונה אחרי 20 דקות (1200000 מ״ש)
-    setTimeout(showAd, 300000);
-
-    // הצגה חוזרת כל 20 דקות
-    setInterval(showAd, 1200000);
-
-
-    // פונקציה לספירת מספר החידונים הכולל ועדכון הכותרת
-    function updateQuizCounter() {
-      // נספור את כל החידונים בכל הדפים
-      let totalQuizCount = 0;
-
-      // איסוף ערכי data-quiz-count מכל הקישורים
-      const categoryLinks = document.querySelectorAll('.category-link');
-      categoryLinks.forEach(link => {
-        const quizCount = parseInt(link.getAttribute('data-quiz-count') || '0');
-        totalQuizCount += quizCount;
-      });
-
-      // עדכון הטקסט בכותרת
-      document.getElementById('quiz-counter').textContent = `כמות החידונים באתר כרגע: ${totalQuizCount}`;
-    }
-
     // יצירת חלקיקים מרחפים
     function createParticles() {
       const container = document.body;
@@ -555,7 +423,6 @@
 
     // הפעלת הפונקציות כאשר הדף נטען
     document.addEventListener('DOMContentLoaded', () => {
-      updateQuizCounter();
       createParticles();
       setupMagicCursor();
       setupItemsAnimation();
